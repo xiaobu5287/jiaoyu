@@ -216,7 +216,7 @@
         <div class="chat-btn" onclick="toggleChat()">💬</div>
     </div>
 
-    <script>
+<script>
     // --- 搜索功能代码开始 ---
     document.getElementById('searchInput').addEventListener('input', function() {
         const searchText = this.value.toLowerCase().trim();
@@ -236,172 +236,149 @@
     // --- 搜索功能代码结束 ---
 
     // 你自己的收款码图片文件名
-        const wechatQr = "d7bf965c8041fe77e971635a71af2be.png";
-        const alipayQr = "cd4f6ee125a17588202c3cba760d332.jpg";
+    const wechatQr = "d7bf965c8041fe77e971635a71af2be.png";
+    const alipayQr = "cd4f6ee125a17588202c3cba760d332.jpg";
 
-        function openDetail(title, imgUrl, desc) {
-            document.getElementById('home-page').style.display = 'none';
-            document.getElementById('detail-page').style.display = 'block';
-            document.getElementById('detail-title').innerText = title;
-            document.getElementById('detail-img').src = imgUrl;
-            document.getElementById('detail-desc').innerText = desc;
-            
-            // 把当前点击的项目名字存入隐藏表单
-            document.getElementById('order-project-name').value = title;
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    function openDetail(title, imgUrl, desc) {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('detail-page').style.display = 'block';
+        document.getElementById('detail-title').innerText = title;
+        document.getElementById('detail-img').src = imgUrl;
+        document.getElementById('detail-desc').innerText = desc;
+        
+        // 把当前点击的项目名字存入隐藏表单
+        document.getElementById('order-project-name').value = title;
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        function goBack() {
-    document.getElementById('detail-page').style.display = 'none';
-    document.getElementById('home-page').style.display = 'block';
-    // 新增：返回首页时，自动清空搜索框的内容，并让所有卡片重新显示
-    document.getElementById('searchInput').value = ''; 
-    document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
-}
+    function goBack() {
+        document.getElementById('detail-page').style.display = 'none';
+        document.getElementById('home-page').style.display = 'block';
+        // 返回首页时，自动清空搜索框的内容，并让所有卡片重新显示
+        document.getElementById('searchInput').value = ''; 
+        document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
+    }
 
-        function selectPay(element) {
-            document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            element.querySelector('input[type="radio"]').checked = true;
-        }
+    function selectPay(element) {
+        document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        element.querySelector('input[type="radio"]').checked = true;
+    }
 
-        function toggleChat() {
-            const chatBox = document.getElementById('chatBox');
-            chatBox.classList.toggle('active');
-        }
+    function toggleChat() {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.classList.toggle('active');
+    }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if(!text) return;
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if(!text) return;
 
-            const chatMessages = document.getElementById('chatMessages');
-            
-            const userMsg = document.createElement('div');
-            userMsg.className = 'msg system';
-            userMsg.style.background = '#2a5298';
-            userMsg.style.color = '#fff';
-            userMsg.style.marginLeft = 'auto';
-            userMsg.innerText = text;
-            chatMessages.appendChild(userMsg);
-            
-            input.value = '';
+        const chatMessages = document.getElementById('chatMessages');
+        
+        const userMsg = document.createElement('div');
+        userMsg.className = 'msg system';
+        userMsg.style.background = '#2a5298';
+        userMsg.style.color = '#fff';
+        userMsg.style.marginLeft = 'auto';
+        userMsg.innerText = text;
+        chatMessages.appendChild(userMsg);
+        
+        input.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            const replyMsg = document.createElement('div');
+            replyMsg.className = 'msg system';
+            replyMsg.innerHTML = `
+                客服正在接入...<br>
+                请扫码添加微信：<br>
+                <img src="f11d124ebda119ce8527b22f5a36672.jpg" style="width: 160px; height: auto; margin: 10px 0; border-radius: 5px; display: block;"><br>
+                或者搜微信号：<strong>v18741532410</strong>
+            `;
+            chatMessages.appendChild(replyMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+    }
 
-            setTimeout(() => {
-                const replyMsg = document.createElement('div');
-                replyMsg.className = 'msg system';
-                replyMsg.innerHTML = `
-                    客服正在接入...<br>
-                    请扫码添加微信：<br>
-                    <img src="f11d124ebda119ce8527b22f5a36672.jpg" style="width: 160px; height: auto; margin: 10px 0; border-radius: 5px; display: block;"><br>
-                    或者搜微信号：<strong>v18741532410</strong>
-                `;
-                chatMessages.appendChild(replyMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
+    function handleChatEnter(e) {
+        if (e.key === 'Enter') {
+            sendChatMessage();
         }
+    }
 
-        function handleChatEnter(e) {
-            if (e.key === 'Enter') {
-                sendChatMessage();
+    // 监听表单提交 (全中文防乱码版本)
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 阻止表单默认跳转
+
+        const payMethod = document.querySelector('input[name="支付方式"]:checked').value;
+        const submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.innerText = '正在提交数据...';
+        submitBtn.disabled = true;
+
+        // 获取用户填写的每一项内容
+        const project = document.getElementById('order-project-name').value;
+        const account = document.getElementById('user-account').value;
+        const password = document.getElementById('user-password').value;
+        const remark = document.getElementById('user-remark').value;
+
+        // 创建新的数据包，用于专门发送纯中文
+        const formData = new FormData();
+        formData.append("access_key", "a69de7b6-ebfa-4e83-be07-93f5be07947f");
+        formData.append("subject", "【新订单通知】" + project); // 这是邮件标题
+        
+        // 把内容拼成一段整整齐齐的中文
+        const emailContent = `
+            收到新的报名订单，详情如下：
+
+            【报名项目】 ${project}
+            【支付方式】 ${payMethod}
+            【学习账号】 ${account}
+            【登录密码】 ${password}
+            【备注信息】 ${remark}
+        `;
+        
+        formData.append("message", emailContent); // 作为一个整体发送
+
+        // 发送数据给 Web3Forms
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData 
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 提交成功后，弹出收款码
+            submitBtn.innerText = '提交订单并支付';
+            submitBtn.disabled = false;
+            
+            // 根据选择显示不同收款码
+            const qrImg = document.getElementById('qrCodeImg');
+            if (payMethod === '微信支付') {
+                qrImg.src = wechatQr;
+            } else {
+                qrImg.src = alipayQr;
             }
-        }
-
-       // 监听表单提交 (已修改为全中文防乱码版本)
-document.getElementById('orderForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // 阻止表单默认跳转
-
-    const payMethod = document.querySelector('input[name="支付方式"]:checked').value;
-    const submitBtn = document.getElementById('submitBtn');
-    
-    submitBtn.innerText = '正在提交数据...';
-    submitBtn.disabled = true;
-
-    // 获取用户填写的每一项内容
-    const project = document.getElementById('order-project-name').value;
-    const account = document.getElementById('user-account').value;
-    const password = document.getElementById('user-password').value;
-    const remark = document.getElementById('user-remark').value;
-
-    // 创建新的数据包，用于专门发送纯中文
-    const formData = new FormData();
-    formData.append("access_key", "a69de7b6-ebfa-4e83-be07-93f5be07947f");
-    formData.append("subject", "【新订单通知】" + project); // 这是邮件标题
-    
-    // 把内容拼成一段整整齐齐的中文
-    const emailContent = `
-        收到新的报名订单，详情如下：
-
-        【报名项目】 ${project}
-        【支付方式】 ${payMethod}
-        【学习账号】 ${account}
-        【登录密码】 ${password}
-        【备注信息】 ${remark}
-    `;
-    
-    formData.append("message", emailContent); // 作为一个整体发送
-
-    // 发送数据给 Web3Forms
-    fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData 
-    })
-    .then(response => response.json())
-    .then(data => {
-        // 提交成功后，弹出收款码
-        submitBtn.innerText = '提交订单并支付';
-        submitBtn.disabled = false;
-        
-        // 根据选择显示不同收款码
-        const qrImg = document.getElementById('qrCodeImg');
-        if (payMethod === '微信支付') {
-            qrImg.src = wechatQr;
-        } else {
-            qrImg.src = alipayQr;
-        }
-        
-        // 显示弹窗
-        document.getElementById('paymentModal').style.display = 'flex';
-    })
-    .catch(error => {
-        alert("提交遇到问题，请重试或直接联系客服。");
-        submitBtn.innerText = '提交订单并支付';
-        submitBtn.disabled = false;
-    });
-});
-            .then(response => response.json())
-            .then(data => {
-                // 提交成功后，弹出收款码
-                submitBtn.innerText = '提交订单并支付';
-                submitBtn.disabled = false;
-                
-                // 根据选择显示不同收款码
-                const qrImg = document.getElementById('qrCodeImg');
-                if (payMethod === '微信支付') {
-                    qrImg.src = wechatQr;
-                } else {
-                    qrImg.src = alipayQr;
-                }
-                
-                // 显示弹窗
-                document.getElementById('paymentModal').style.display = 'flex';
-            })
-            .catch(error => {
-                alert("提交遇到问题，请重试或直接联系客服。");
-                submitBtn.innerText = '提交订单并支付';
-                submitBtn.disabled = false;
-            });
+            
+            // 显示弹窗
+            document.getElementById('paymentModal').style.display = 'flex';
+        })
+        .catch(error => {
+            alert("提交遇到问题，请重试或直接联系客服。");
+            submitBtn.innerText = '提交订单并支付';
+            submitBtn.disabled = false;
         });
+    });
 
-        // 关闭支付弹窗并重置表单
-        function closeModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.getElementById('orderForm').reset();
-            // 返回首页（可选）
-            goBack();
-        }
-    </script>
+    // 关闭支付弹窗并重置表单
+    function closeModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+        document.getElementById('orderForm').reset();
+        // 返回首页
+        goBack();
+    }
+</script>
 </body>
 </html>
