@@ -43,7 +43,7 @@
         .form-group input[type="text"], .form-group input[type="password"], .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
         .form-group input:focus, .form-group textarea:focus { border-color: #2a5298; }
         
-        .pay-methods { display: flex; gap: 20px; margin: 15px 0; }
+        .pay-methods { display: flex; gap: 20px; margin-bottom: 20px; }
         .pay-method { flex: 1; text-align: center; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .pay-method.active { border-color: #2a5298; background: #eef2fa; }
         .pay-method input[type="radio"] { margin-right: 5px; }
@@ -92,7 +92,7 @@
                 
                 <!-- 卡片 2 -->
                 <div class="card" onclick="openDetail('山东继续教育', 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800', '山东省专业技术人员继续教育平台，涵盖各类职称评审所需学时。')">
-                    < img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=400" alt="山东继续教育">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=400" alt="山东继续教育">
                     <div class="card-content">
                         <h3>山东继续教育</h3>
                         <p>专业技术人员公需科目及专业科目培训。</p >
@@ -101,7 +101,7 @@
                 
                 <!-- 卡片 3 -->
                 <div class="card" onclick="openDetail('广州技术教育', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800', '广州技术教育紧跟前沿科技，提供IT、人工智能、大数据等热门技术培训。')">
-                    < img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400" alt="广州技术教育">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400" alt="广州技术教育">
                     <div class="card-content">
                         <h3>广州技术教育</h3>
                         <p>IT前沿技术、职业技能考证一站式服务。</p >
@@ -110,7 +110,7 @@
                 
                 <!-- 卡片 4 -->
                 <div class="card" onclick="openDetail('寒暑假教师研修', 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800', '面向全国中小学教师的寒暑假专项研修项目，提升教育教学能力。')">
-                    < img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=400" alt="教师研修">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=400" alt="教师研修">
                     <div class="card-content">
                         <h3>寒暑假教师研修</h3>
                         <p>提升教学能力，获取研修学时证明。</p >
@@ -137,30 +137,41 @@
                     <li>完成规定学时后，申请并下载结业证书。</li>
                 </ol>
             </div>
+            
+            <!-- 表单区域 -->
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <div class="form-group">
-                    <label>学习账号 (如手机号/邮箱)</label>
-                    <input type="text" id="user-account" placeholder="请输入您的账号">
-                </div>
-                <div class="form-group">
-                    <label>登录密码</label>
-                    <input type="password" id="user-password" placeholder="请设置或输入密码">
-                </div>
-                <div class="form-group">
-                    <label>备注信息</label>
-                    <textarea id="user-remark" rows="2" placeholder="如有特殊要求请填写"></textarea>
-                </div>
-                <label style="font-weight: bold; display: block; margin-bottom: 10px;">选择支付方式</label>
-                <div class="pay-methods">
-                    <label class="pay-method active" onclick="selectPay(this)">
-                        <input type="radio" name="pay" value="wechat" checked> 微信支付
-                    </label>
-                    <label class="pay-method" onclick="selectPay(this)">
-                        <input type="radio" name="pay" value="alipay"> 支付宝支付
-                    </label>
-                </div>
-                <button class="submit-btn" onclick="submitOrder()">提交订单并支付</button>
+                <form action="https://api.web3forms.com/submit" method="POST" id="orderForm">
+                    <!-- Web3Forms 专属 Key -->
+                    <input type="hidden" name="access_key" value="a69de7b6-ebfa-4e83-be07-93f5be07947f">
+                    <!-- 隐藏字段记录报名项目 -->
+                    <input type="hidden" name="报名项目" id="order-project-name" value="">
+
+                    <label style="font-weight: bold; display: block; margin-bottom: 10px;">选择支付方式</label>
+                    <div class="pay-methods">
+                        <label class="pay-method active" onclick="selectPay(this)">
+                            <input type="radio" name="支付方式" value="微信支付" checked> 微信支付
+                        </label>
+                        <label class="pay-method" onclick="selectPay(this)">
+                            <input type="radio" name="支付方式" value="支付宝支付"> 支付宝支付
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>学习账号 (如手机号/邮箱)</label>
+                        <input type="text" name="学习账号" id="user-account" placeholder="请输入您的账号" required>
+                    </div>
+                    <div class="form-group">
+                        <label>登录密码</label>
+                        <input type="password" name="登录密码" id="user-password" placeholder="请设置或输入密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label>备注信息</label>
+                        <textarea name="备注信息" id="user-remark" rows="2" placeholder="如有特殊要求请填写"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">提交订单并支付</button>
+                </form>
             </div>
         </div>
     </div>
@@ -189,6 +200,10 @@
             document.getElementById('detail-title').innerText = title;
             document.getElementById('detail-img').src = imgUrl;
             document.getElementById('detail-desc').innerText = desc;
+            
+            // 把当前点击的项目名字存入隐藏表单
+            document.getElementById('order-project-name').value = title;
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -201,18 +216,6 @@
             document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
             element.querySelector('input[type="radio"]').checked = true;
-        }
-
-        function submitOrder() {
-            const account = document.getElementById('user-account').value;
-            const pwd = document.getElementById('user-password').value;
-            const payMethod = document.querySelector('input[name="pay"]:checked').value;
-            
-            if(!account || !pwd) {
-                alert('请填写账号和密码！');
-                return;
-            }
-            alert(`订单生成成功！\n支付方式: ${payMethod === 'wechat' ? '微信' : '支付宝'}\n账号: ${account}\n即将跳转至支付界面...`);
         }
 
         function toggleChat() {
@@ -241,12 +244,11 @@
             setTimeout(() => {
                 const replyMsg = document.createElement('div');
                 replyMsg.className = 'msg system';
-                // 这里的代码绝对没有空格，直接渲染图片
                 replyMsg.innerHTML = `
                     客服正在接入...<br>
                     请扫码添加专属老师微信：<br>
                     <img src="f11d124ebda119ce8527b22f5a36672.jpg" style="width: 160px; height: auto; margin: 10px 0; border-radius: 5px; display: block;"><br>
-                    或者直接拨打：<strong>15278509797</strong>
+                    或者直接搜微信号：<strong>v18741532410</strong>
                 `;
                 chatMessages.appendChild(replyMsg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -258,6 +260,16 @@
                 sendChatMessage();
             }
         }
+
+        // 监听表单提交，给用户提示（表单数据会自动发送给 Web3Forms）
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            document.getElementById('submitBtn').innerText = '正在提交订单...';
+            document.getElementById('submitBtn').disabled = true;
+            
+            setTimeout(() => {
+                alert("订单信息已提交！即将为您跳转至支付界面...");
+            }, 500);
+        });
     </script>
 </body>
 </html>
