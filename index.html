@@ -267,9 +267,9 @@
                 replyMsg.className = 'msg system';
                 replyMsg.innerHTML = `
                     客服正在接入...<br>
-                    请扫码添加专属老师微信：<br>
+                    请扫码添加微信：<br>
                     <img src="f11d124ebda119ce8527b22f5a36672.jpg" style="width: 160px; height: auto; margin: 10px 0; border-radius: 5px; display: block;"><br>
-                    或者直接拨打：<strong>15278509797</strong>
+                    或者搜微信号：<strong>v18741532410</strong>
                 `;
                 chatMessages.appendChild(replyMsg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -282,24 +282,68 @@
             }
         }
 
-        // 监听表单提交
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // 阻止表单默认跳转
+       // 监听表单提交 (已修改为全中文防乱码版本)
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // 阻止表单默认跳转
 
-            const payMethod = document.querySelector('input[name="支付方式"]:checked').value;
-            const submitBtn = document.getElementById('submitBtn');
-            
-            submitBtn.innerText = '正在提交数据...';
-            submitBtn.disabled = true;
+    const payMethod = document.querySelector('input[name="支付方式"]:checked').value;
+    const submitBtn = document.getElementById('submitBtn');
+    
+    submitBtn.innerText = '正在提交数据...';
+    submitBtn.disabled = true;
 
-            // 收集表单数据
-            const formData = new FormData(this);
+    // 获取用户填写的每一项内容
+    const project = document.getElementById('order-project-name').value;
+    const account = document.getElementById('user-account').value;
+    const password = document.getElementById('user-password').value;
+    const remark = document.getElementById('user-remark').value;
 
-            // 发送数据给 Web3Forms 以发送邮件给你
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                body: formData
-            })
+    // 创建新的数据包，用于专门发送纯中文
+    const formData = new FormData();
+    formData.append("access_key", "a69de7b6-ebfa-4e83-be07-93f5be07947f");
+    formData.append("subject", "【新订单通知】" + project); // 这是邮件标题
+    
+    // 把内容拼成一段整整齐齐的中文
+    const emailContent = `
+        收到新的报名订单，详情如下：
+
+        【报名项目】 ${project}
+        【支付方式】 ${payMethod}
+        【学习账号】 ${account}
+        【登录密码】 ${password}
+        【备注信息】 ${remark}
+    `;
+    
+    formData.append("message", emailContent); // 作为一个整体发送
+
+    // 发送数据给 Web3Forms
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData 
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 提交成功后，弹出收款码
+        submitBtn.innerText = '提交订单并支付';
+        submitBtn.disabled = false;
+        
+        // 根据选择显示不同收款码
+        const qrImg = document.getElementById('qrCodeImg');
+        if (payMethod === '微信支付') {
+            qrImg.src = wechatQr;
+        } else {
+            qrImg.src = alipayQr;
+        }
+        
+        // 显示弹窗
+        document.getElementById('paymentModal').style.display = 'flex';
+    })
+    .catch(error => {
+        alert("提交遇到问题，请重试或直接联系客服。");
+        submitBtn.innerText = '提交订单并支付';
+        submitBtn.disabled = false;
+    });
+});
             .then(response => response.json())
             .then(data => {
                 // 提交成功后，弹出收款码
