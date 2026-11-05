@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育培训服务平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        /* 顶部大标题 */
+        .header {
+            background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        /* 项目卡片容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        /* 项目卡片 */
+        .project-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1e88e5;
+        }
+        .card-content p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        /* 全局悬浮聊天按钮 */
+        .chat-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        .chat-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #1e88e5;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(30,136,229,0.4);
+        }
+        .chat-panel {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 320px;
+            height: 450px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .chat-panel.show {
+            display: block;
+        }
+        .chat-panel iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* 响应式适配手机 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+                letter-spacing: 4px;
+            }
+            .chat-panel {
+                width: 90vw;
+                right: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>教育培训</h1>
+        <p>专业学历提升 · 职业技能培训服务平台</p >
+    </div>
+
+    <div class="container">
+        <div class="card-grid">
+            <!-- 项目1 -->
+            <a href=" " class="project-card">
+                < img src="https://picsum.photos/id/20/600/400" alt="广西继续教育" class="card-img">
+                <div class="card-content">
+                    <h3>广西继续教育</h3>
+                    <p>成人学历提升、自考成考辅导，本地院校合作，正规可查。</p >
+                </div>
+            </a >
+            <!-- 项目2 -->
+            <a href="shandong.html" class="project-card">
+                < img src="https://picsum.photos/id/48/600/400" alt="山东区教育" class="card-img">
+                <div class="card-content">
+                    <h3>山东区教育</h3>
+                    <p>职业资格认证、技能培训，线上线下结合，保障通过率。</p >
+                </div>
+            </a >
+            <!-- 项目3 -->
+            <a href="guangzhou.html" class="project-card">
+                < img src="https://picsum.photos/id/180/600/400" alt="广州技术教育" class="card-img">
+                <div class="card-content">
+                    <h3>广州技术教育</h3>
+                    <p>IT技术、设计类职业培训，实战教学，推荐就业。</p >
+                </div>
+            </a >
+            <!-- 复制上面的a标签块，即可新增更多项目 -->
+        </div>
+    </div>
+
+    <!-- 全局聊天室 -->
+    <div class="chat-float">
+        <div class="chat-panel" id="chatPanel">
+            <iframe src="https://chat.shablang.com/room/xiaobujiaoyu" allow="microphone"></iframe>
+        </div>
+        <button class="chat-btn" onclick="toggleChat()">在线咨询</button>
+    </div>
+
+    <script>
+        function toggleChat() {
+            document.getElementById('chatPanel').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
