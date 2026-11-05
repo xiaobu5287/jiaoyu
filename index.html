@@ -43,13 +43,22 @@
         .form-group input[type="text"], .form-group input[type="password"], .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
         .form-group input:focus, .form-group textarea:focus { border-color: #2a5298; }
         
-        .pay-methods { display: flex; gap: 20px; margin-bottom: 20px; }
+        .pay-methods { display: flex; gap: 20px; margin: 15px 0; }
         .pay-method { flex: 1; text-align: center; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .pay-method.active { border-color: #2a5298; background: #eef2fa; }
         .pay-method input[type="radio"] { margin-right: 5px; }
         
         .submit-btn { width: 100%; padding: 12px; background: #2a5298; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s; }
         .submit-btn:hover { background: #1e3c72; }
+
+        /* 支付弹窗样式 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-content h3 { color: #2a5298; margin-bottom: 10px; font-size: 1.5rem; }
+        .modal-content p { color: #666; margin-bottom: 20px; font-size: 0.95rem; }
+        .modal-content img { width: 100%; max-width: 260px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee; }
+        .modal-btn { width: 100%; padding: 12px; background: #52c41a; color: #fff; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+        .modal-btn:hover { background: #389e0d; }
 
         .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
         .chat-btn { width: 60px; height: 60px; background: #2a5298; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 24px; }
@@ -75,7 +84,7 @@
 
     <header id="main-header">
         <h1>教育培训</h1>
-        <p>专注继续教育 · 成就更好未来</p >
+        <p>专注继续教育 · 成就更好未来</p>
     </header>
 
     <div class="container">
@@ -86,7 +95,7 @@
                     <img src="ab57a19715624d77a6174dbe00e8a06.jpg" alt="广西继续教育">
                     <div class="card-content">
                         <h3>广西继续教育</h3>
-                        <p>点击查看详细招生简章及报名流程。</p >
+                        <p>点击查看详细招生简章及报名流程。</p>
                     </div>
                 </div>
                 
@@ -95,7 +104,7 @@
                     <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=400" alt="山东继续教育">
                     <div class="card-content">
                         <h3>山东继续教育</h3>
-                        <p>专业技术人员公需科目及专业科目培训。</p >
+                        <p>专业技术人员公需科目及专业科目培训。</p>
                     </div>
                 </div>
                 
@@ -104,7 +113,7 @@
                     <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400" alt="广州技术教育">
                     <div class="card-content">
                         <h3>广州技术教育</h3>
-                        <p>IT前沿技术、职业技能考证一站式服务。</p >
+                        <p>IT前沿技术、职业技能考证一站式服务。</p>
                     </div>
                 </div>
                 
@@ -113,20 +122,20 @@
                     <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=400" alt="教师研修">
                     <div class="card-content">
                         <h3>寒暑假教师研修</h3>
-                        <p>提升教学能力，获取研修学时证明。</p >
+                        <p>提升教学能力，获取研修学时证明。</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="detail-page">
-            <a class="back-btn" onclick="goBack()">← 返回首页</a >
+            <a class="back-btn" onclick="goBack()">← 返回首页</a>
             <div class="detail-header">
-                < img id="detail-img" src="" alt="详情图片">
+                <img id="detail-img" src="" alt="详情图片">
                 <h2 id="detail-title">项目标题</h2>
             </div>
             <div class="detail-info">
-                <p id="detail-desc">项目描述内容...</p >
+                <p id="detail-desc">项目描述内容...</p>
             </div>
             <div class="steps">
                 <h3>📌 报名及学习步骤</h3>
@@ -141,21 +150,10 @@
             <!-- 表单区域 -->
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <form action="https://api.web3forms.com/submit" method="POST" id="orderForm">
-                    <!-- Web3Forms 专属 Key -->
+                <!-- 加入了 Web3Forms 的 action 和隐藏字段 -->
+                <form id="orderForm" action="https://api.web3forms.com/submit" method="POST">
                     <input type="hidden" name="access_key" value="a69de7b6-ebfa-4e83-be07-93f5be07947f">
-                    <!-- 隐藏字段记录报名项目 -->
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
-
-                    <label style="font-weight: bold; display: block; margin-bottom: 10px;">选择支付方式</label>
-                    <div class="pay-methods">
-                        <label class="pay-method active" onclick="selectPay(this)">
-                            <input type="radio" name="支付方式" value="微信支付" checked> 微信支付
-                        </label>
-                        <label class="pay-method" onclick="selectPay(this)">
-                            <input type="radio" name="支付方式" value="支付宝支付"> 支付宝支付
-                        </label>
-                    </div>
 
                     <div class="form-group">
                         <label>学习账号 (如手机号/邮箱)</label>
@@ -169,10 +167,29 @@
                         <label>备注信息</label>
                         <textarea name="备注信息" id="user-remark" rows="2" placeholder="如有特殊要求请填写"></textarea>
                     </div>
-                    
+                    <label style="font-weight: bold; display: block; margin-bottom: 10px;">选择支付方式</label>
+                    <div class="pay-methods">
+                        <label class="pay-method active" onclick="selectPay(this)">
+                            <input type="radio" name="支付方式" value="微信支付" checked> 微信支付
+                        </label>
+                        <label class="pay-method" onclick="selectPay(this)">
+                            <input type="radio" name="支付方式" value="支付宝支付"> 支付宝支付
+                        </label>
+                    </div>
                     <button type="submit" class="submit-btn" id="submitBtn">提交订单并支付</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- 支付弹窗 (默认隐藏) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <h3>请扫码支付</h3>
+            <p>支付完成后，请点击下方按钮</p>
+            <!-- 这里图片的 src 会由 JS 动态替换 -->
+            <img id="qrCodeImg" src="" alt="收款码">
+            <button class="modal-btn" onclick="closeModal()">我已完成支付</button>
         </div>
     </div>
 
@@ -194,6 +211,10 @@
     </div>
 
     <script>
+        // 你自己的收款码图片文件名
+        const wechatQr = "d7bf965c8041fe77e971635a71af2be.png";
+        const alipayQr = "cd4f6ee125a17588202c3cba760d332.jpg";
+
         function openDetail(title, imgUrl, desc) {
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('detail-page').style.display = 'block';
@@ -248,7 +269,7 @@
                     客服正在接入...<br>
                     请扫码添加专属老师微信：<br>
                     <img src="f11d124ebda119ce8527b22f5a36672.jpg" style="width: 160px; height: auto; margin: 10px 0; border-radius: 5px; display: block;"><br>
-                    或者直接搜微信号：<strong>v18741532410</strong>
+                    或者直接拨打：<strong>15278509797</strong>
                 `;
                 chatMessages.appendChild(replyMsg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -261,15 +282,55 @@
             }
         }
 
-        // 监听表单提交，给用户提示（表单数据会自动发送给 Web3Forms）
+        // 监听表单提交
         document.getElementById('orderForm').addEventListener('submit', function(e) {
-            document.getElementById('submitBtn').innerText = '正在提交订单...';
-            document.getElementById('submitBtn').disabled = true;
+            e.preventDefault(); // 阻止表单默认跳转
+
+            const payMethod = document.querySelector('input[name="支付方式"]:checked').value;
+            const submitBtn = document.getElementById('submitBtn');
             
-            setTimeout(() => {
-                alert("订单信息已提交！即将为您跳转至支付界面...");
-            }, 500);
+            submitBtn.innerText = '正在提交数据...';
+            submitBtn.disabled = true;
+
+            // 收集表单数据
+            const formData = new FormData(this);
+
+            // 发送数据给 Web3Forms 以发送邮件给你
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 提交成功后，弹出收款码
+                submitBtn.innerText = '提交订单并支付';
+                submitBtn.disabled = false;
+                
+                // 根据选择显示不同收款码
+                const qrImg = document.getElementById('qrCodeImg');
+                if (payMethod === '微信支付') {
+                    qrImg.src = wechatQr;
+                } else {
+                    qrImg.src = alipayQr;
+                }
+                
+                // 显示弹窗
+                document.getElementById('paymentModal').style.display = 'flex';
+            })
+            .catch(error => {
+                alert("提交遇到问题，请重试或直接联系客服。");
+                submitBtn.innerText = '提交订单并支付';
+                submitBtn.disabled = false;
+            });
         });
+
+        // 关闭支付弹窗并重置表单
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('orderForm').reset();
+            // 返回首页（可选）
+            goBack();
+        }
     </script>
 </body>
 </html>
