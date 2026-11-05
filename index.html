@@ -88,8 +88,14 @@
     </header>
 
     <div class="container">
-        <div id="home-page">
-            <div class="grid">
+<div id="home-page">
+    <!-- 搜索框开始 -->
+    <div style="margin-bottom: 30px; text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <input type="text" id="searchInput" placeholder="? 搜索项目（例如：广西、山东、研修）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    </div>
+    <!-- 搜索框结束 -->
+    
+    <div class="grid" id="cardGrid">
                 <!-- 卡片 1 (广西继续教育) -->
                 <div class="card" onclick="openDetail('广西继续教育', 'ab57a19715624d77a6174dbe00e8a06.jpg', '广西继续教育致力于为广大学员提供高质量的成人学历提升与职业技能培训。')">
                     <img src="ab57a19715624d77a6174dbe00e8a06.jpg" alt="广西继续教育">
@@ -211,7 +217,25 @@
     </div>
 
     <script>
-        // 你自己的收款码图片文件名
+    // --- 搜索功能代码开始 ---
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchText = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('h3').innerText.toLowerCase();
+            const desc = card.querySelector('p').innerText.toLowerCase();
+            
+            if (title.includes(searchText) || desc.includes(searchText)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+    // --- 搜索功能代码结束 ---
+
+    // 你自己的收款码图片文件名
         const wechatQr = "d7bf965c8041fe77e971635a71af2be.png";
         const alipayQr = "cd4f6ee125a17588202c3cba760d332.jpg";
 
@@ -229,9 +253,12 @@
         }
 
         function goBack() {
-            document.getElementById('detail-page').style.display = 'none';
-            document.getElementById('home-page').style.display = 'block';
-        }
+    document.getElementById('detail-page').style.display = 'none';
+    document.getElementById('home-page').style.display = 'block';
+    // 新增：返回首页时，自动清空搜索框的内容，并让所有卡片重新显示
+    document.getElementById('searchInput').value = ''; 
+    document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
+}
 
         function selectPay(element) {
             document.querySelectorAll('.pay-method').forEach(el => el.classList.remove('active'));
