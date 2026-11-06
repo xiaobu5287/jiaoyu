@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>内部发信系统</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f4f7f6; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 500px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        
+        #loginBox { text-align: center; }
+        #loginBox h2 { color: #2a5298; margin-bottom: 20px; }
+        #pwdInput { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px; text-align: center; letter-spacing: 2px; }
+        
+        #mainBox { display: none; }
+        h2 { color: #2a5298; text-align: center; margin-bottom: 20px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; font-size: 14px; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; resize: vertical; }
+        textarea:focus { border-color: #2a5298; }
+        
+        button { width: 100%; padding: 15px; background: #2a5298; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:active { background: #1e3c72; }
+        button:disabled { background: #999; }
+        
+        #status { text-align: center; margin-top: 15px; color: #52c41a; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="loginBox">
+        <h2>🔒 内部管理系统</h2>
+        <input type="password" id="pwdInput" placeholder="请输入管理密码" onkeypress="handleEnter(event)">
+        <button onclick="checkPwd()">进入系统</button>
+    </div>
+
+    <div id="mainBox">
+        <h2>📧 批量发信助手</h2>
+        <div class="form-group">
+            <label>1. 粘贴内容（系统会自动提取其中的邮箱）</label>
+            <textarea id="emailList" rows="5" placeholder="直接把你收到的订单邮件内容全选复制粘贴到这里，系统会自动识别里面的所有邮箱号。"></textarea>
+        </div>
+        <div class="form-group">
+            <label>2. 发送内容</label>
+            <textarea id="emailContent" rows="2">已完成，请登录查看。</textarea>
+        </div>
+        <button onclick="sendEmails()" id="sendBtn">🚀 一键发送</button>
+        <div id="status"></div>
+    </div>
+</div>
+
+<script>
+    // ================= 你的专属配置 =================
+    const PUBLIC_KEY = "tfIP-Gk5cUFMks23k"; 
+    const SERVICE_ID = "service_pkejgbs";
+    const TEMPLATE_ID = "template_vkxud99";
+    const ADMIN_PWD = "89345"; // 你的后台登录密码，可自己改
+    // ================================================
+
+    emailjs.init(PUBLIC_KEY);
+
+    function handleEnter(e) { if (e.key === 'Enter') checkPwd(); }
+
+    function checkPwd() {
+        const pwd = document.getElementById('pwdInput').value;
+        if (pwd === ADMIN_PWD) {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('mainBox').style.display = 'block';
+        } else {
+            alert("密码错误！");
+        }
+    }
+
+    function sendEmails() {
+        const rawText = document.getElementById('emailList').value;
+        const content = document.getElementById('emailContent').value;
+        const btn = document.getElementById('sendBtn');
+        const statusDiv = document.getElementById('status');
+
+        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+        const emails = [...new Set(rawText.match(emailRegex) || [])]; 
+
+        if (emails.length === 0) {
+            alert("没有识别到有效的邮箱号，请检查粘贴的内容！");
+            return;
+        }
+
+        if (!confirm(`共识别到 ${emails.length} 个邮箱，确定要发送吗？`)) return;
+
+        btn.disabled = true;
+        btn.innerText = "正在发送中...";
+        statusDiv.innerText = "";
+        
+        let successCount = 0;
+
+        emails.forEach((email, index) => {
+            setTimeout(() => {
+                emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+                    to_email: email,
+                    to_name: email.split('@')[0], 
+                    message: content
+                }).then(function() {
+                    successCount++;
+                    statusDiv.innerText = `✅ 成功发送 ${successCount} / ${emails.length} 封`;
+                    
+                    if (index === emails.length - 1) {
+                        btn.disabled = false;
+                        btn.innerText = "🚀 一键发送";
+                        document.getElementById('emailList').value = ''; 
+                        alert("全部发送完毕！");
+                    }
+                }, function(error) {
+                    statusDiv.innerText = `❌ 发送失败，请检查额度或配置`;
+                });
+            }, index * 800); 
+        });
+    }
+</script>
+</body>
+</html>
