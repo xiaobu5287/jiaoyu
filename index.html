@@ -132,10 +132,7 @@
             
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <div style="text-align: center; margin-bottom: 20px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffa39e;">
-                    <span style="font-size: 1.1rem; color: #333;">需支付金额：</span>
-                    <span id="form-price" style="font-size: 1.6rem; color: #ff4d4f; font-weight: bold;">￥0.00</span>
-                </div>
+                <!-- 已移除：表单内部的支付金额显示 -->
 
                 <form id="orderForm">
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
@@ -224,15 +221,15 @@
             id: 'guangxi',
             title: '广西继续教育',
             price: 10,
-            coverImg: '微信图片_20261107101129.jpg', // 首页封面图
-            targetUrl: 'https://gxjxjy.rst.gxzf.gov.cn/', // 点击跳转的网址
+            coverImg: '微信图片_20261107101129.jpg',
+            targetUrl: 'https://gxjxjy.rst.gxzf.gov.cn/',
             desc: '广西继续教育致力于为广大学员提供高质量的提升与职业技能培训。',
-            detailImgs: ['微信图片_20261107101129.jpg'] // 详情页的大图，可以放多张
+            detailImgs: ['微信图片_20261107101129.jpg']
         },
         {
             id: 'shandong',
             title: '山东省教师教育网',
-            price: 15,
+            price: 8, // 已修改为 8 块
             coverImg: '2d4c22e002fcd33b016731e7199d499.png',
             targetUrl: 'https://www.qleteacher.com',
             desc: '专业技术人员公需科目及专业科目培训。',
@@ -269,7 +266,6 @@
 
     let currentPrice = 0;
 
-    // 拦截侧滑/后退
     window.addEventListener('popstate', function(event) {
         if (document.getElementById('detail-page').style.display === 'block') {
             document.getElementById('detail-page').style.display = 'none';
@@ -279,14 +275,12 @@
         }
     });
 
-    // 页面加载完毕后执行
     document.addEventListener('DOMContentLoaded', function() {
         renderHomePage();
         setupFormSubmit();
         setupSearch();
     });
 
-    // 渲染首页卡片
     function renderHomePage() {
         const grid = document.getElementById('cardGrid');
         grid.innerHTML = projectData.map(proj => `
@@ -300,7 +294,6 @@
         `).join('');
     }
 
-    // 搜索功能
     function setupSearch() {
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
@@ -321,7 +314,6 @@
         });
     }
 
-    // 打开详情页（统一处理所有项目）
     function openProjectDetail(projectId) {
         const proj = projectData.find(p => p.id === projectId);
         if (!proj) return;
@@ -329,10 +321,8 @@
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
         
-        // 设置标题
         document.getElementById('detail-title').innerText = proj.title + '-学习助手';
         
-        // 生成图文排版区域（按钮、明文、红字、图片列表）
         const contentHtml = `
             <a href="${proj.targetUrl}" target="_blank" class="detail-link-btn">点击查看网址</a>
             <div class="detail-link-text">适配网址：${proj.targetUrl}</div>
@@ -341,17 +331,14 @@
         `;
         document.getElementById('detail-content').innerHTML = contentHtml;
         
-        // 设置表单里的项目和价格
         document.getElementById('order-project-name').value = proj.title + '-学习助手';
         currentPrice = proj.price;
-        document.getElementById('form-price').innerText = `￥${proj.price}.00`;
+        // 移除给 form-price 赋值的代码，因为元素已经被删除了
 
-        // 压入历史记录，防侧滑退出
         history.pushState({ page: 'detail' }, '', '#detail');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 返回首页
     function goBack() {
         if (window.location.hash === '#detail') {
             history.back();
@@ -363,7 +350,6 @@
         }
     }
 
-    // 表单提交处理
     function setupFormSubmit() {
         const orderForm = document.getElementById('orderForm');
         orderForm.addEventListener('submit', function(e) {
