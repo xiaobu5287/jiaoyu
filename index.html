@@ -6,7 +6,7 @@
     <title>教育培训 - 专业继续教育平台</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Microsoft YaHei', sans-serif; }
-        body { background-color: #f5f7fa; color: #333; overflow-x: hidden; /* 防止手机端横向滚动 */ }
+        body { background-color: #f5f7fa; color: #333; overflow-x: hidden; }
         
         header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         header h1 { font-size: 3rem; letter-spacing: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 10px; }
@@ -17,8 +17,6 @@
         
         .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; cursor: pointer; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-        
-        /* 长图完整显示，不裁剪 */
         .card img { width: 100%; height: 180px; object-fit: contain; background-color: #f0f0f0; }
         
         .card-content { padding: 20px; }
@@ -26,60 +24,55 @@
         .card-content p { color: #666; font-size: 0.9rem; line-height: 1.5; }
 
         #detail-page { display: none; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 50px;}
-        .back-btn { display: inline-block; margin-bottom: 20px; color: #2a5298; cursor: pointer; font-weight: bold; text-decoration: none; }
-        .back-btn:hover { text-decoration: underline; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #2a5298; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 1.1rem; padding: 10px 0; }
         .detail-header { text-align: center; margin-bottom: 30px; }
         .detail-header img { max-width: 100%; border-radius: 8px; margin-bottom: 20px; }
         .detail-header h2 { color: #1e3c72; font-size: 2rem; }
         
-        /* 修复长网址在手机上撑破屏幕 */
         .detail-info { line-height: 1.8; color: #444; margin-bottom: 30px; word-wrap: break-word; word-break: break-all; }
-        .detail-info a { word-break: break-all; }
         
         .steps { background: #f8f9fa; padding: 20px; border-left: 4px solid #2a5298; border-radius: 4px; margin-bottom: 30px; }
         .steps ol { margin-left: 20px; }
-        .steps li { margin-bottom: 10px; }
+        .steps li { margin-bottom: 10px; font-size: 1.05rem; }
 
         .order-form { background: #fcfcfc; border: 1px solid #eee; padding: 25px; border-radius: 8px; max-width: 500px; margin: 0 auto; }
         .order-form h3 { margin-bottom: 20px; color: #333; text-align: center; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.95rem; }
         
-        /* 输入框和文本域统一基础样式 */
-        .form-group input[type="text"], .form-group input[type="password"], .form-group textarea, .form-group select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; font-size: 0.95rem; }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #2a5298; }
+        /* 统一输入框样式，修复手机端溢出 */
+        .form-group > input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; font-size: 0.95rem; }
         
-        /* 邮箱组合框样式 */
-        .email-group { display: flex; }
-        .email-group input { flex: 1; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; border-right: none !important; }
-        .email-group select { width: 120px; border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; background-color: #f9f9f9; cursor: pointer; }
-        
+        /* 完美适配手机的邮箱组合框 */
+        .email-group { display: flex; width: 100%; border: 1px solid #ddd; border-radius: 5px; overflow: hidden; background: #fff; }
+        .email-group input { flex: 1; min-width: 0; padding: 10px; border: none; outline: none; font-size: 0.95rem; }
+        .email-group select { width: 115px; flex-shrink: 0; padding: 10px; border: none; border-left: 1px solid #ddd; background-color: #f9f9f9; outline: none; font-size: 0.95rem; cursor: pointer; }
+        .email-group input:focus, .email-group select:focus { background-color: #fff; box-shadow: inset 0 0 0 1px #2a5298; }
+
         .pay-methods { display: flex; gap: 20px; margin: 15px 0; }
-        .pay-method { flex: 1; text-align: center; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .pay-method.active { border-color: #2a5298; background: #eef2fa; }
+        .pay-method { flex: 1; text-align: center; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+        .pay-method.active { border-color: #2a5298; background: #eef2fa; color: #2a5298; font-weight: bold; }
         .pay-method input[type="radio"] { margin-right: 5px; }
         
         .submit-btn { width: 100%; padding: 12px; background: #2a5298; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s; }
         .submit-btn:hover { background: #1e3c72; }
 
-        /* 支付弹窗样式 */
+        /* 支付弹窗 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .modal-content h3 { color: #2a5298; margin-bottom: 15px; font-size: 1.5rem; }
         .modal-content img { width: 100%; max-width: 260px; border-radius: 8px; margin: 15px 0; border: 1px solid #eee; }
         .modal-btn { width: 100%; padding: 12px; background: #52c41a; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold;}
-        .modal-btn:hover { background: #389e0d; }
 
+        /* 客服组件 */
         .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
-        .chat-btn { width: 60px; height: 60px; background: #2a5298; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 24px; }
-        .chat-btn:hover { background: #1e3c72; }
+        .chat-btn { width: 60px; height: 60px; background: #2a5298; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 18px; font-weight: bold; }
         .chat-box { display: none; position: absolute; bottom: 80px; right: 0; width: 320px; height: 400px; background: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; border: 1px solid #eee; }
         .chat-box.active { display: flex; }
-        .chat-header { background: #2a5298; color: #fff; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .chat-header span { cursor: pointer; }
+        .chat-header { background: #2a5298; color: #fff; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
+        .chat-header span.close-chat { cursor: pointer; font-size: 22px; line-height: 1; }
         .chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; }
-        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; max-width: 80%; }
-        .msg.system { background: #e2e8f0; color: #333; }
+        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; max-width: 80%; background: #e2e8f0; }
         .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #eee; }
         .chat-input-area input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; outline: none; }
         .chat-input-area button { margin-left: 10px; padding: 8px 15px; background: #2a5298; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
@@ -89,8 +82,8 @@
             #detail-page { padding: 15px; }
             .detail-header h2 { font-size: 1.5rem; }
             .detail-info { font-size: 0.95rem; }
-            .chat-box { width: 280px; right: -10px; }
-            .email-group select { width: 110px; font-size: 0.85rem; }
+            .chat-box { width: 290px; right: -10px; }
+            .email-group select { width: 110px; font-size: 0.85rem; padding: 10px 5px; }
         }
     </style>
 </head>
@@ -103,16 +96,16 @@
 
     <div class="container">
         <div id="home-page">
-            <!-- 成团优惠横幅 -->
+            <!-- 横幅（去除了Emoji） -->
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="display: inline-block; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); color: #fff; padding: 12px 30px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255,75,43,0.3); letter-spacing: 1px;">
-                    ? 成团有优惠，详情请联系客服！
+                    成团有优惠，详情请联系客服！
                 </span>
             </div>
 
-            <!-- 搜索框 -->
+            <!-- 搜索框（去除了Emoji） -->
             <div style="margin-bottom: 30px; text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <input type="text" id="searchInput" placeholder="? 搜索项目（例如：广西、山东、研修）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <input type="text" id="searchInput" placeholder="搜索项目（例如：广西、山东、研修）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             </div>
             
             <div class="grid" id="cardGrid">
@@ -155,7 +148,7 @@
         </div>
 
         <div id="detail-page">
-            <a class="back-btn" onclick="goBack()">← 返回首页</a>
+            <a class="back-btn" onclick="goBack()">&lt; 返回首页</a>
             <div class="detail-header">
                 <img id="detail-img" src="" alt="详情图片">
                 <h2 id="detail-title">项目标题</h2>
@@ -166,7 +159,8 @@
             </div>
             
             <div class="steps">
-                <h3>? 报名及学习步骤</h3>
+                <!-- 去除了📌 -->
+                <h3>报名及学习步骤</h3>
                 <ol>
                     <li>填写下方订单信息并完成支付。</li>
                     <li>客服将在24小时内为您服务。</li>
@@ -179,14 +173,12 @@
             <div class="order-form">
                 <h3>填写订单信息</h3>
                 
-                <!-- 支付金额显示 -->
                 <div style="text-align: center; margin-bottom: 20px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffa39e;">
                     <span style="font-size: 1.1rem; color: #333;">需支付金额：</span>
                     <span id="form-price" style="font-size: 1.6rem; color: #ff4d4f; font-weight: bold;">￥0.00</span>
                 </div>
 
-                <form id="orderForm" action="https://api.web3forms.com/submit" method="POST">
-                    <input type="hidden" name="access_key" value="a69de7b6-ebfa-4e83-be07-93f5be07947f">
+                <form id="orderForm">
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
 
                     <div class="form-group">
@@ -194,11 +186,10 @@
                         <input type="text" name="学习账号" id="user-account" placeholder="请输入您的账号" required>
                     </div>
                     
-                    <!-- 专属接收通知邮箱（带后缀选择器） -->
                     <div class="form-group">
                         <label>接收通知邮箱 <span style="color:#ff4d4f; font-size: 0.8rem;">(必填，如果没有邮箱，请添加客服微信)</span></label>
                         <div class="email-group">
-                            <input type="text" id="notify-email-prefix" placeholder="请输入邮箱前缀" required>
+                            <input type="text" id="notify-email-prefix" placeholder="请输入前缀" required>
                             <select id="notify-email-suffix">
                                 <option value="@qq.com">@qq.com</option>
                                 <option value="@163.com">@163.com</option>
@@ -208,10 +199,6 @@
                                 <option value="@sina.com">@sina.com</option>
                                 <option value="@sohu.com">@sohu.com</option>
                                 <option value="@foxmail.com">@foxmail.com</option>
-                                <option value="@139.com">@139.com</option>
-                                <option value="@wo.cn">@wo.cn</option>
-                                <option value="@189.cn">@189.cn</option>
-                                <option value="@aliyun.com">@aliyun.com</option>
                             </select>
                         </div>
                     </div>
@@ -257,7 +244,8 @@
         <div class="chat-box" id="chatBox">
             <div class="chat-header">
                 <span>在线客服</span>
-                <span onclick="toggleChat()" style="cursor: pointer;">?</span>
+                <!-- 替换了✖ -->
+                <span class="close-chat" onclick="toggleChat()">&times;</span>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="msg system">您好！欢迎来到小布教育培训平台，请问有什么可以帮您？</div>
@@ -267,15 +255,26 @@
                 <button onclick="sendChatMessage()">发送</button>
             </div>
         </div>
-        <div class="chat-btn" onclick="toggleChat()">?</div>
+        <!-- 替换了💬 -->
+        <div class="chat-btn" onclick="toggleChat()">客服</div>
     </div>
 
 <script>
     let currentPrice = 0;
 
+    // 拦截浏览器侧滑/后退操作，防止直接退出网页
+    window.addEventListener('popstate', function(event) {
+        if (document.getElementById('detail-page').style.display === 'block') {
+            // 如果在详情页，拦截返回，强制切回主页
+            document.getElementById('detail-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'block';
+            document.getElementById('searchInput').value = ''; 
+            document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         
-        // 搜索功能
         const searchInput = document.getElementById('searchInput');
         if(searchInput) {
             searchInput.addEventListener('input', function() {
@@ -295,7 +294,6 @@
             });
         }
 
-        // 监听表单提交
         const orderForm = document.getElementById('orderForm');
         if(orderForm) {
             orderForm.addEventListener('submit', function(e) {
@@ -310,12 +308,10 @@
                 const project = document.getElementById('order-project-name').value;
                 const account = document.getElementById('user-account').value;
                 
-                // 智能拼接完整邮箱
                 let emailPrefix = document.getElementById('notify-email-prefix').value.trim();
                 const emailSuffix = document.getElementById('notify-email-suffix').value;
                 let notifyEmail = emailPrefix;
                 
-                // 如果用户直接输入了带@的完整邮箱，就不拼接后缀了
                 if (!emailPrefix.includes('@')) {
                     notifyEmail = emailPrefix + emailSuffix;
                 }
@@ -387,6 +383,8 @@
         currentPrice = price;
         document.getElementById('form-price').innerText = `￥${price}.00`;
 
+        // 压入历史记录，用于拦截侧滑
+        history.pushState({ page: 'detail' }, '', '#detail');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -396,12 +394,16 @@
         document.getElementById('detail-title').innerText = '山东省教师教育网-课程助手';
         document.getElementById('detail-img').style.display = 'none';
         
-        // 需求5：扩大网址点击区域，并新开窗口
+        // 优化网址显示：做成醒目的绿色按钮，解决点不到的问题
         document.querySelector('.detail-info').innerHTML = `
             <div style="text-align: center; margin-bottom: 30px;">
-                <div style="margin-bottom: 20px; font-weight: bold; font-size: 1.2rem; line-height: 1.5;">
-                    <span style="color: #52c41a;">适配网址：</span>
-                    <a href="https://www.qleteacher.com" target="_blank" style="color: #52c41a; text-decoration: underline; padding: 5px; display: inline-block; word-break: break-all;">https://www.qleteacher.com</a>
+                <div style="margin-bottom: 20px;">
+                    <a href="https://www.qleteacher.com" target="_blank" style="display: inline-block; padding: 12px 25px; background-color: #52c41a; color: #fff; border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(82,196,26,0.3);">
+                        点击打开学习网址
+                    </a>
+                    <div style="margin-top: 10px; color: #666; font-size: 0.9rem; word-break: break-all;">
+                        适配网址：https://www.qleteacher.com
+                    </div>
                 </div>
                 
                 <p style="color: #ff4d4f; font-size: 1.1rem; font-weight: bold; margin-bottom: 20px;">以此学习界面为准</p>
@@ -416,14 +418,22 @@
         currentPrice = 15;
         document.getElementById('form-price').innerText = `￥15.00`;
 
+        // 压入历史记录，用于拦截侧滑
+        history.pushState({ page: 'detail' }, '', '#detail');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function goBack() {
-        document.getElementById('detail-page').style.display = 'none';
-        document.getElementById('home-page').style.display = 'block';
-        document.getElementById('searchInput').value = ''; 
-        document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
+        // 如果当前带有 #detail 标签，则触发浏览器的历史后退，这样会被 popstate 拦截并切回主页
+        if (window.location.hash === '#detail') {
+            history.back();
+        } else {
+            // 兜底逻辑
+            document.getElementById('detail-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'block';
+            document.getElementById('searchInput').value = ''; 
+            document.querySelectorAll('.card').forEach(card => card.style.display = 'block');
+        }
     }
 
     function selectPay(element) {
