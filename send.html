@@ -26,6 +26,20 @@
         button:disabled { background: #999; }
         
         #status { text-align: center; margin-top: 15px; color: #52c41a; font-weight: bold; font-size: 14px; }
+
+        /* --- 新增：发送记录样式 --- */
+        .history-section { margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 20px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .history-header h3 { font-size: 15px; color: #333; margin: 0; }
+        .clear-btn { background: none; color: #ff4d4f; border: none; font-size: 13px; cursor: pointer; width: auto; padding: 5px; font-weight: normal; }
+        .clear-btn:active { background: none; color: #d9363e; }
+        
+        .history-list { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 10px; max-height: 200px; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #eee; color: #555; }
+        .history-item:last-child { border-bottom: none; }
+        .history-email { font-weight: bold; color: #2a5298; word-break: break-all; }
+        .history-time { color: #999; font-size: 12px; margin-left: 10px; white-space: nowrap; }
+        .empty-history { text-align: center; color: #999; font-size: 13px; padding: 15px 0; }
     </style>
 </head>
 <body>
@@ -49,6 +63,17 @@
         </div>
         <button onclick="sendEmails()" id="sendBtn">🚀 一键发送</button>
         <div id="status"></div>
+
+        <!-- 新增：已发送记录区域 -->
+        <div class="history-section">
+            <div class="history-header">
+                <h3>📋 已发送记录 (最近10条)</h3>
+                <button class="clear-btn" onclick="clearHistory()">清空记录</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 记录由JS动态渲染 -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -57,10 +82,15 @@
     const PUBLIC_KEY = "tfIP-Gk5cUFMks23k"; 
     const SERVICE_ID = "service_pkejgbs";
     const TEMPLATE_ID = "template_vkxud99";
-    const ADMIN_PWD = "89345"; // 你的后台登录密码，可自己改
+    const ADMIN_PWD = "89345"; // 你的后台登录密码
     // ================================================
 
     emailjs.init(PUBLIC_KEY);
+
+    // 页面加载时，如果已登录过，渲染一次记录
+    document.addEventListener('DOMContentLoaded', () => {
+        renderHistory();
+    });
 
     function handleEnter(e) { if (e.key === 'Enter') checkPwd(); }
 
@@ -69,6 +99,7 @@
         if (pwd === ADMIN_PWD) {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('mainBox').style.display = 'block';
+            renderHistory(); // 登录成功后刷新一次记录
         } else {
             alert("密码错误！");
         }
@@ -95,6 +126,7 @@
         statusDiv.innerText = "";
         
         let successCount = 0;
+        let currentHistory = JSON.parse(localStorage.getItem('sentEmailsHistory')) || [];
 
         emails.forEach((email, index) => {
             setTimeout(() => {
@@ -106,6 +138,22 @@
                     successCount++;
                     statusDiv.innerText = `✅ 成功发送 ${successCount} / ${emails.length} 封`;
                     
+                    // --- 新增：记录到 LocalStorage ---
+                    const 当前 = new Date();
+                    const timeStr = `${当前.getMonth()+1}-${当前.getDate()} ${当前.getHours()}:${当前.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    currentHistory.push({ email: email, time: timeStr });
+                    
+                    // 如果超过10条，删掉最旧的
+                    if (currentHistory.length > 10) {
+                        currentHistory.shift();
+                    }
+                    localStorage.setItem('sentEmailsHistory', JSON.stringify(currentHistory));
+                    
+                    // 每成功发一封，刷新一下列表显示
+                    renderHistory();
+                    // ---------------------------------
+
                     if (index === emails.length - 1) {
                         btn.disabled = false;
                         btn.innerText = "🚀 一键发送";
@@ -117,6 +165,33 @@
                 });
             }, index * 800); 
         });
+    }
+
+    // --- 新增：渲染已发送记录 ---
+    function renderHistory() {
+        const historyList = document.getElementById('historyList');
+        const history = JSON.parse(localStorage.getItem('sentEmailsHistory')) || [];
+
+        if (history.length === 0) {
+            historyList.innerHTML = '<div class="empty-history">暂无发送记录</div>';
+            return;
+        }
+
+        // 倒序显示（最新的在最上面）
+        historyList.innerHTML = history.slice().reverse().map(item => `
+            <div class="history-item">
+                <span class="history-email">${item.email}</span>
+                <span class="history-time">${item.time}</span>
+            </div>
+        `).join('');
+    }
+
+    // --- 新增：清空历史记录 ---
+    function clearHistory() {
+        if(confirm("确定要清空所有已发送记录吗？")) {
+            localStorage.removeItem('sentEmailsHistory');
+            renderHistory();
+        }
     }
 </script>
 </body>
