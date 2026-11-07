@@ -43,9 +43,16 @@
         .order-form { background: #fcfcfc; border: 1px solid #eee; padding: 25px; border-radius: 8px; max-width: 500px; margin: 0 auto; }
         .order-form h3 { margin-bottom: 20px; color: #333; text-align: center; }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="email"], .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
-        .form-group input:focus, .form-group textarea:focus { border-color: #2a5298; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.95rem; }
+        
+        /* 输入框和文本域统一基础样式 */
+        .form-group input[type="text"], .form-group input[type="password"], .form-group textarea, .form-group select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; font-size: 0.95rem; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #2a5298; }
+        
+        /* 邮箱组合框样式 */
+        .email-group { display: flex; }
+        .email-group input { flex: 1; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; border-right: none !important; }
+        .email-group select { width: 120px; border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; background-color: #f9f9f9; cursor: pointer; }
         
         .pay-methods { display: flex; gap: 20px; margin: 15px 0; }
         .pay-method { flex: 1; text-align: center; border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
@@ -83,6 +90,7 @@
             .detail-header h2 { font-size: 1.5rem; }
             .detail-info { font-size: 0.95rem; }
             .chat-box { width: 280px; right: -10px; }
+            .email-group select { width: 110px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -95,21 +103,20 @@
 
     <div class="container">
         <div id="home-page">
-            <!-- 【新增】成团优惠横幅 -->
+            <!-- 成团优惠横幅 -->
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="display: inline-block; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); color: #fff; padding: 12px 30px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255,75,43,0.3); letter-spacing: 1px;">
-                    🔥 成团有优惠，详情请联系客服！
+                    ? 成团有优惠，详情请联系客服！
                 </span>
             </div>
 
-            <!-- 搜索框开始 -->
+            <!-- 搜索框 -->
             <div style="margin-bottom: 30px; text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <input type="text" id="searchInput" placeholder="🔍 搜索项目（例如：广西、山东、研修）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <input type="text" id="searchInput" placeholder="? 搜索项目（例如：广西、山东、研修）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             </div>
-            <!-- 搜索框结束 -->
             
             <div class="grid" id="cardGrid">
-                <!-- 卡片 1 (广西继续教育) 设定价格为 10 -->
+                <!-- 广西 -->
                 <div class="card" onclick="openDetail('广西继续教育-课程助手', 'ab57a19715624d77a6174dbe00e8a06.jpg', '广西继续教育致力于为广大学员提供高质量的提升与职业技能培训。', 10)">
                     <img src="ab57a19715624d77a6174dbe00e8a06.jpg" alt="广西继续教育">
                     <div class="card-content">
@@ -118,7 +125,7 @@
                     </div>
                 </div>
                 
-                <!-- 卡片 2 (山东省教师教育网 专属定制) -->
+                <!-- 山东 -->
                 <div class="card" onclick="openShandongDetail()">
                     <img src="2d4c22e002fcd33b016731e7199d499.png" alt="山东省教师教育网">
                     <div class="card-content">
@@ -127,7 +134,7 @@
                     </div>
                 </div>
                 
-                <!-- 卡片 3 设定价格为 15 -->
+                <!-- 广州 -->
                 <div class="card" onclick="openDetail('广州市中小学教师继续教育-课程助手', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800', '广州技术教育紧跟前沿科技，提供IT、人工智能、大数据等热门技术培训。', 15)">
                     <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400" alt="广州技术教育">
                     <div class="card-content">
@@ -136,7 +143,7 @@
                     </div>
                 </div>
                 
-                <!-- 卡片 4 设定价格为 10 -->
+                <!-- 研修 -->
                 <div class="card" onclick="openDetail('智慧中小学寒暑假教师研修-课程助手', 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800', '面向全国中小学教师的寒暑假专项研修项目，提升教育教学能力。', 10)">
                     <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=400" alt="教师研修">
                     <div class="card-content">
@@ -159,7 +166,7 @@
             </div>
             
             <div class="steps">
-                <h3>📌 报名及学习步骤</h3>
+                <h3>? 报名及学习步骤</h3>
                 <ol>
                     <li>填写下方订单信息并完成支付。</li>
                     <li>客服将在24小时内为您服务。</li>
@@ -187,10 +194,26 @@
                         <input type="text" name="学习账号" id="user-account" placeholder="请输入您的账号" required>
                     </div>
                     
-                    <!-- 【新增】专属接收通知邮箱 -->
+                    <!-- 专属接收通知邮箱（带后缀选择器） -->
                     <div class="form-group">
-                        <label>接收通知邮箱 <span style="color:#ff4d4f; font-size: 0.8rem;">(必填，用于发给您开通通知)</span></label>
-                        <input type="email" name="接收邮箱" id="notify-email" placeholder="请填写您的常用邮箱" required>
+                        <label>接收通知邮箱 <span style="color:#ff4d4f; font-size: 0.8rem;">(必填，如果没有邮箱，请添加客服微信)</span></label>
+                        <div class="email-group">
+                            <input type="text" id="notify-email-prefix" placeholder="请输入邮箱前缀" required>
+                            <select id="notify-email-suffix">
+                                <option value="@qq.com">@qq.com</option>
+                                <option value="@163.com">@163.com</option>
+                                <option value="@126.com">@126.com</option>
+                                <option value="@gmail.com">@gmail.com</option>
+                                <option value="@outlook.com">@outlook.com</option>
+                                <option value="@sina.com">@sina.com</option>
+                                <option value="@sohu.com">@sohu.com</option>
+                                <option value="@foxmail.com">@foxmail.com</option>
+                                <option value="@139.com">@139.com</option>
+                                <option value="@wo.cn">@wo.cn</option>
+                                <option value="@189.cn">@189.cn</option>
+                                <option value="@aliyun.com">@aliyun.com</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -216,16 +239,14 @@
         </div>
     </div>
 
-    <!-- 支付弹窗 (默认隐藏) -->
+    <!-- 支付弹窗 -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content">
             <h3>请扫码支付</h3>
-            
             <div style="margin-bottom: 15px; padding: 10px; background: #fffbe6; border-radius: 8px; border: 1px solid #ffe58f;">
                 <span style="font-size: 0.95rem; color: #666;">支付金额：</span>
                 <span id="modal-price" style="font-size: 1.5rem; color: #ff4d4f; font-weight: bold;">￥0.00</span>
             </div>
-
             <p>支付完成后，请点击下方按钮</p>
             <img id="qrCodeImg" src="" alt="收款码">
             <button class="modal-btn" onclick="closeModal()">我已完成支付</button>
@@ -236,10 +257,9 @@
         <div class="chat-box" id="chatBox">
             <div class="chat-header">
                 <span>在线客服</span>
-                <span onclick="toggleChat()" style="cursor: pointer;">✖</span>
+                <span onclick="toggleChat()" style="cursor: pointer;">?</span>
             </div>
             <div class="chat-messages" id="chatMessages">
-                <!-- 【修改】客服问候语加上“小布” -->
                 <div class="msg system">您好！欢迎来到小布教育培训平台，请问有什么可以帮您？</div>
             </div>
             <div class="chat-input-area">
@@ -247,16 +267,15 @@
                 <button onclick="sendChatMessage()">发送</button>
             </div>
         </div>
-        <div class="chat-btn" onclick="toggleChat()">💬</div>
+        <div class="chat-btn" onclick="toggleChat()">?</div>
     </div>
 
 <script>
-    // 全局变量，记录当前项目的价格
     let currentPrice = 0;
 
     document.addEventListener('DOMContentLoaded', function() {
         
-        // --- 搜索功能代码 ---
+        // 搜索功能
         const searchInput = document.getElementById('searchInput');
         if(searchInput) {
             searchInput.addEventListener('input', function() {
@@ -290,8 +309,17 @@
 
                 const project = document.getElementById('order-project-name').value;
                 const account = document.getElementById('user-account').value;
-                // 【新增】获取邮箱的值
-                const notifyEmail = document.getElementById('notify-email').value;
+                
+                // 智能拼接完整邮箱
+                let emailPrefix = document.getElementById('notify-email-prefix').value.trim();
+                const emailSuffix = document.getElementById('notify-email-suffix').value;
+                let notifyEmail = emailPrefix;
+                
+                // 如果用户直接输入了带@的完整邮箱，就不拼接后缀了
+                if (!emailPrefix.includes('@')) {
+                    notifyEmail = emailPrefix + emailSuffix;
+                }
+
                 const password = document.getElementById('user-password').value;
                 const remark = document.getElementById('user-remark').value;
 
@@ -299,7 +327,6 @@
                 formData.append("access_key", "a69de7b6-ebfa-4e83-be07-93f5be07947f");
                 formData.append("subject", "【新订单通知】" + project); 
                 
-                // 【修改】邮件内容加入接收邮箱
                 const emailContent = `
                     收到新的报名订单，详情如下：
 
@@ -333,9 +360,7 @@
                         qrImg.src = alipayQr;
                     }
                     
-                    // 把金额同步显示到弹窗里
                     document.getElementById('modal-price').innerText = `￥${currentPrice}.00`;
-
                     document.getElementById('paymentModal').style.display = 'flex';
                 })
                 .catch(error => {
@@ -347,13 +372,10 @@
         }
     });
 
-    // --- 页面跳转与显示函数 ---
-
     function openDetail(title, imgUrl, desc, price) {
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
         document.getElementById('detail-title').innerText = title;
-        
         document.getElementById('detail-img').style.display = 'block';
         document.getElementById('detail-img').src = imgUrl;
         
@@ -362,8 +384,6 @@
         document.getElementById('detail-desc').innerText = desc;
         
         document.getElementById('order-project-name').value = title;
-        
-        // 设置价格显示
         currentPrice = price;
         document.getElementById('form-price').innerText = `￥${price}.00`;
 
@@ -373,16 +393,16 @@
     function openShandongDetail() {
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
-        // 【修改】山东标题加后缀
         document.getElementById('detail-title').innerText = '山东省教师教育网-课程助手';
-        
         document.getElementById('detail-img').style.display = 'none';
         
+        // 需求5：扩大网址点击区域，并新开窗口
         document.querySelector('.detail-info').innerHTML = `
             <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="color: #52c41a; font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; word-wrap: break-word;">
-                    适配网址：<a href="https://www.qleteacher.com" target="_blank" style="color: #52c41a; text-decoration: underline; word-break: break-all;">https://www.qleteacher.com</a>
-                </h2>
+                <div style="margin-bottom: 20px; font-weight: bold; font-size: 1.2rem; line-height: 1.5;">
+                    <span style="color: #52c41a;">适配网址：</span>
+                    <a href="https://www.qleteacher.com" target="_blank" style="color: #52c41a; text-decoration: underline; padding: 5px; display: inline-block; word-break: break-all;">https://www.qleteacher.com</a>
+                </div>
                 
                 <p style="color: #ff4d4f; font-size: 1.1rem; font-weight: bold; margin-bottom: 20px;">以此学习界面为准</p>
                 
@@ -392,10 +412,7 @@
             </div>
         `;
         
-        // 【修改】传给后台的值也加后缀
         document.getElementById('order-project-name').value = '山东省教师教育网-课程助手';
-        
-        // 山东项目设定为 15 元
         currentPrice = 15;
         document.getElementById('form-price').innerText = `￥15.00`;
 
