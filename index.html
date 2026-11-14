@@ -40,7 +40,11 @@
         .steps li { margin-bottom: 10px; font-size: 1.05rem; }
 
         .order-form { background: #fcfcfc; border: 1px solid #eee; padding: 25px; border-radius: 8px; max-width: 500px; margin: 0 auto; }
-        .order-form h3 { margin-bottom: 20px; color: #333; text-align: center; }
+        .order-form h3 { margin-bottom: 10px; color: #333; text-align: center; }
+        
+        /* 表单顶部的新提示语 */
+        .form-top-tip { text-align: center; color: #ff4d4f; font-size: 0.95rem; margin-bottom: 20px; font-weight: bold; }
+
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.95rem; }
         .form-group > input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; font-size: 0.95rem; }
@@ -95,9 +99,10 @@
 
     <div class="container">
         <div id="home-page">
+            <!-- 【已修改】横幅增加了一句话，并调整了字号和行高适配手机 -->
             <div style="text-align: center; margin-bottom: 20px;">
-                <span style="display: inline-block; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); color: #fff; padding: 12px 30px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255,75,43,0.3); letter-spacing: 1px;">
-                    成团有优惠，详情请联系客服！
+                <span style="display: inline-block; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); color: #fff; padding: 12px 25px; border-radius: 30px; font-size: 1.05rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255,75,43,0.3); letter-spacing: 1px; line-height: 1.5;">
+                    成团有优惠，详情请联系客服！<br>没有的学习课程，可以联系客服微信进行开发。
                 </span>
             </div>
 
@@ -105,7 +110,6 @@
                 <input type="text" id="searchInput" placeholder="搜索项目（例如：广西、山东、深圳）..." style="width: 100%; padding: 15px 20px; border: 2px solid #ddd; border-radius: 30px; font-size: 1.1rem; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             </div>
             
-            <!-- 卡片列表通过 JS 动态生成 -->
             <div class="grid" id="cardGrid"></div>
         </div>
 
@@ -115,10 +119,7 @@
                 <h2 id="detail-title">项目标题</h2>
             </div>
             
-            <!-- 动态图文区域 -->
-            <div class="detail-content-wrapper" id="detail-content">
-                <!-- 内容由JS注入 -->
-            </div>
+            <div class="detail-content-wrapper" id="detail-content"></div>
             
             <div class="steps">
                 <h3>报名及学习步骤</h3>
@@ -132,7 +133,8 @@
             
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <!-- 已移除：表单内部的支付金额显示 -->
+                <!-- 【已新增】表单顶部的提示语 -->
+                <p class="form-top-tip">如果只能扫码进行登录，请联系客服微信。</p>
 
                 <form id="orderForm">
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
@@ -214,54 +216,34 @@
 
 <script>
     // ==========================================
-    // 🌟 项目数据配置区（以后加项目改这里就行）
+    // 🌟 项目数据配置区
     // ==========================================
     const projectData = [
-        {
-            id: 'guangxi',
-            title: '广西继续教育',
-            price: 10,
-            coverImg: '微信图片_20261107101129.jpg',
-            targetUrl: 'https://gxjxjy.rst.gxzf.gov.cn/',
-            desc: '广西继续教育致力于为广大学员提供高质量的提升与职业技能培训。',
-            detailImgs: ['微信图片_20261107101129.jpg']
-        },
-        {
-            id: 'shandong',
-            title: '山东省教师教育网',
-            price: 8, // 已修改为 8 块
-            coverImg: '2d4c22e002fcd33b016731e7199d499.png',
-            targetUrl: 'https://www.qleteacher.com',
-            desc: '专业技术人员公需科目及专业科目培训。',
-            detailImgs: ['85bc1bdb273ab7414493b973ce01916.png', '2d4c22e002fcd33b016731e7199d499.png']
-        },
-        {
-            id: 'gxganbu',
-            title: '广西干部网络学院',
-            price: 10,
-            coverImg: '微信图片_20261107101539.png',
-            targetUrl: 'https://www.gxela.gov.cn',
-            desc: '广西干部网络学院在线学习平台。',
-            detailImgs: ['微信图片_20261107101539.png']
-        },
-        {
-            id: 'shenzhen',
-            title: '深圳市教师教育网',
-            price: 15,
-            coverImg: '微信图片_20261107101849.png',
-            targetUrl: 'https://www.0755tt.com/home?redirect=%2Fportal',
-            desc: '深圳市教师继续教育专属培训平台。',
-            detailImgs: ['微信图片_20261107101849.png']
-        },
-        {
-            id: 'guangzhou',
-            title: '广州市中小学教师继续教育网',
-            price: 15,
-            coverImg: '微信图片_20261107101857.png',
-            targetUrl: 'https://www.gzteacher.com/',
-            desc: '广州市中小学教师继续教育平台。',
-            detailImgs: ['微信图片_20261107101857.png']
-        }
+        // --- 原有项目 ---
+        { id: 'guangxi', title: '广西继续教育', price: 10, coverImg: '微信图片_20261107101129.jpg', targetUrl: 'https://gxjxjy.rst.gxzf.gov.cn/', desc: '广西继续教育致力于为广大学员提供高质量的提升与职业技能培训。', detailImgs: ['微信图片_20261107101129.jpg'] },
+        { id: 'shandong', title: '山东省教师教育网', price: 8, coverImg: '2d4c22e002fcd33b016731e7199d499.png', targetUrl: 'https://www.qleteacher.com', desc: '专业技术人员公需科目及专业科目培训。', detailImgs: ['85bc1bdb273ab7414493b973ce01916.png', '2d4c22e002fcd33b016731e7199d499.png'] },
+        { id: 'gxganbu', title: '广西干部网络学院', price: 10, coverImg: '微信图片_20261107101539.png', targetUrl: 'https://www.gxela.gov.cn', desc: '广西干部网络学院在线学习平台。', detailImgs: ['微信图片_20261107101539.png'] },
+        { id: 'shenzhen', title: '深圳市教师教育网', price: 10, coverImg: '微信图片_20261107101849.png', targetUrl: 'https://www.0755tt.com/home?redirect=%2Fportal', desc: '深圳市教师继续教育专属培训平台。', detailImgs: ['微信图片_20261107101849.png'] },
+        { id: 'guangzhou', title: '广州市中小学教师继续教育网', price: 10, coverImg: '微信图片_20261107101857.png', targetUrl: 'https://www.gzteacher.com/', desc: '广州市中小学教师继续教育平台。', detailImgs: ['微信图片_20261107101857.png'] },
+
+        // --- 新增项目 ---
+        { id: 'hnu', title: '湖南大学国家级专业技术人员继续教育基地', price: 10, coverImg: '0e08a8e97abcc3009927b7e03d2997a5.png', targetUrl: 'https://jxjyjd.hnu.edu.cn/', desc: '湖南大学国家级专业技术人员继续教育基地培训平台。', detailImgs: ['0e08a8e97abcc3009927b7e03d2997a5.png'] },
+        { id: 'hunnu', title: '湖南师范大学国家级专业技术人员教育基地', price: 10, coverImg: 'f5e0c82a9dd1ee4b0a7168d23a63b2b5.png', targetUrl: 'https://zjjxjy.hunnu.edu.cn/', desc: '湖南师范大学国家级专业技术人员教育基地培训平台。', detailImgs: ['f5e0c82a9dd1ee4b0a7168d23a63b2b5.png'] },
+        { id: 'cqooc', title: '重庆智慧教育平台(高校在线)', price: 10, coverImg: 'd620608e8f48a242408b0038960c6af0.jpg', targetUrl: 'http://www.cqooc.com/', desc: '重庆智慧教育平台(高校在线)学习入口。', detailImgs: ['d620608e8f48a242408b0038960c6af0.jpg'] },
+        { id: 'huaxia', title: '华夏教师研培网', price: 10, coverImg: 'f8788f2cc7fcc80a246f8843a85268c5.jpg', targetUrl: 'http://study.huaxiajiaoshiyanpei.com', desc: '华夏教师研培网在线学习平台。', detailImgs: ['f8788f2cc7fcc80a246f8843a85268c5.jpg'] },
+        { id: 'ctt', title: '烟草网络学院', price: 10, coverImg: 'aba5d04c7fcedd7b863f9146a7d22219.jpg', targetUrl: 'http://mooc.ctt.cn', desc: '烟草网络学院在线课程平台。', detailImgs: ['aba5d04c7fcedd7b863f9146a7d22219.jpg'] },
+        { id: 'jlsdy', title: '吉林云党校在线课程', price: 10, coverImg: '356ac06b39addf9763ab19f6f80bf7a5.jpg', targetUrl: 'https://www.jlsdyjy.cn/edu/login/', desc: '吉林云党校在线课程平台。', detailImgs: ['356ac06b39addf9763ab19f6f80bf7a5.jpg'] },
+        { id: 'yanxiu', title: '教师研修网', price: 10, coverImg: '94f6ae22886f15b53c9d5b3b96cfcbce.png', targetUrl: 'https://ipx.yanxiu.com/', desc: '教师研修网在线研修平台。', detailImgs: ['94f6ae22886f15b53c9d5b3b96cfcbce.png'] },
+        { id: 'teacherlearning', title: '中国教师研修云平台', price: 10, coverImg: '31df5f4df2d00cdff89cca0ee0de0768.png', targetUrl: 'https://www.teacherlearning.com.cn/', desc: '中国教师研修云平台。', detailImgs: ['31df5f4df2d00cdff89cca0ee0de0768.png'] },
+        { id: 'zhanyc', title: '新版中国教育干部网络学院', price: 10, coverImg: '19c50c46b83d79b09e6169c29cbecf15.jpg', targetUrl: 'http://doc.zhanyc.cn/pages/zgjygbwlxy/', desc: '新版中国教育干部网络学院。', detailImgs: ['19c50c46b83d79b09e6169c29cbecf15.jpg'] },
+        { id: 'heze', title: '菏泽专技继续教育-菏泽市人力资源发展促进会', price: 10, coverImg: 'd2ee8bcd71ff3bd4d3a8809ceaa03ff1.jpg', targetUrl: 'http://jsxy.tyjrpx.com', desc: '菏泽专技继续教育在线平台。', detailImgs: ['d2ee8bcd71ff3bd4d3a8809ceaa03ff1.jpg'] },
+        { id: 'cq12348', title: '重庆市法治理论知识考试系统答题助手', price: 10, coverImg: '888c87ad4999fa34a8af2e1dd1090e52.jpg', targetUrl: 'http://cq.12348.gov.cn', desc: '重庆市法治理论知识考试系统。', detailImgs: ['888c87ad4999fa34a8af2e1dd1090e52.jpg'] },
+        { id: 'qypx', title: '广东开放大学|南方教师在线|清远市教师专业发展与管理平台', price: 10, coverImg: '5a8fe568233f03e8cb8256f8e8d1c733.jpg', targetUrl: 'https://qypx.ttcn.cn/pcm/login', desc: '清远市教师专业发展与管理平台。', detailImgs: ['5a8fe568233f03e8cb8256f8e8d1c733.jpg'] },
+        { id: 'swmu', title: '西南医科大学公需科目.泸州市专业技术人员继续教育', price: 10, coverImg: '87f990e5b2d81bd77acdd26e18b2bd91.jpg', targetUrl: 'https://jxjy.swmu.edu.cn/web/newsList', desc: '泸州市专业技术人员继续教育平台。', detailImgs: ['87f990e5b2d81bd77acdd26e18b2bd91.jpg'] },
+        { id: 'gzsrs', title: '贵州公需课|贵州省专业技术人员继续教育平台', price: 10, coverImg: '0840597ef5de797579c40eb2e059490d.jpg', targetUrl: 'https://gzjxjy.gzsrs.cn/thr102-profession-tp/template/pc/#/index', desc: '贵州省专业技术人员继续教育平台。', detailImgs: ['0840597ef5de797579c40eb2e059490d.jpg'] },
+        { id: 'henanyixue', title: '河南省继续医学教育学习平台', price: 10, coverImg: '4d63ec3842672a511bf39eaa897b26f0.jpg', targetUrl: 'https://yuancheng.henanyixue.com', desc: '河南省继续医学教育学习平台。', detailImgs: ['4d63ec3842672a511bf39eaa897b26f0.jpg'] },
+        { id: '91huayi', title: '91华医网', price: 10, coverImg: '4b800ff110d4a35fa9e13fbaac17915c.png', targetUrl: 'https://www.91huayi.com', desc: '91华医网在线学习平台。', detailImgs: ['4b800ff110d4a35fa9e13fbaac17915c.png'] },
+        { id: 'pep', title: '特教教材国家级示范培训', price: 10, coverImg: '05db20f85aaf911ed11c347631928e19.jpg', targetUrl: 'https://wp.pep.com.cn/web/index.php?/login/index/0/1', desc: '特教教材国家级示范培训平台。', detailImgs: ['05db20f85aaf911ed11c347631928e19.jpg'] }
     ];
 
     let currentPrice = 0;
@@ -287,7 +269,7 @@
             <div class="card" onclick="openProjectDetail('${proj.id}')">
                 <img src="${proj.coverImg}" alt="${proj.title}">
                 <div class="card-content">
-                    <h3>${proj.title}-学习助手</h3>
+                    <h3>${proj.title}-课程助手</h3>
                     <p>${proj.desc}</p>
                 </div>
             </div>
@@ -321,7 +303,7 @@
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
         
-        document.getElementById('detail-title').innerText = proj.title + '-学习助手';
+        document.getElementById('detail-title').innerText = proj.title + '-课程助手';
         
         const contentHtml = `
             <a href="${proj.targetUrl}" target="_blank" class="detail-link-btn">点击查看网址</a>
@@ -331,9 +313,8 @@
         `;
         document.getElementById('detail-content').innerHTML = contentHtml;
         
-        document.getElementById('order-project-name').value = proj.title + '-学习助手';
+        document.getElementById('order-project-name').value = proj.title + '-课程助手';
         currentPrice = proj.price;
-        // 移除给 form-price 赋值的代码，因为元素已经被删除了
 
         history.pushState({ page: 'detail' }, '', '#detail');
         window.scrollTo({ top: 0, behavior: 'smooth' });
