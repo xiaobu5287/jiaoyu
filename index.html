@@ -28,7 +28,6 @@
         .detail-header { text-align: center; margin-bottom: 30px; }
         .detail-header h2 { color: #1e3c72; font-size: 2rem; }
         
-        /* 详情页图文排版样式 */
         .detail-content-wrapper { text-align: center; margin-bottom: 30px; word-wrap: break-word; word-break: break-all; }
         .detail-link-btn { display: inline-block; padding: 12px 30px; background-color: #52c41a; color: #fff; border-radius: 8px; text-decoration: none; font-size: 1.2rem; font-weight: bold; box-shadow: 0 4px 10px rgba(82,196,26,0.3); margin-bottom: 15px; }
         .detail-link-text { font-size: 1rem; color: #666; margin-bottom: 20px; }
@@ -42,8 +41,12 @@
         .order-form { background: #fcfcfc; border: 1px solid #eee; padding: 25px; border-radius: 8px; max-width: 500px; margin: 0 auto; }
         .order-form h3 { margin-bottom: 10px; color: #333; text-align: center; }
         
-        /* 表单顶部的新提示语 */
         .form-top-tip { text-align: center; color: #ff4d4f; font-size: 0.95rem; margin-bottom: 20px; font-weight: bold; }
+
+        /* 专属金额提示框（默认隐藏） */
+        .form-price-box { display: none; text-align: center; margin-bottom: 20px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffa39e; }
+        .form-price-box span:first-child { font-size: 1.1rem; color: #333; }
+        .form-price-box span:last-child { font-size: 1.6rem; color: #ff4d4f; font-weight: bold; }
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.95rem; }
@@ -60,14 +63,12 @@
         
         .submit-btn { width: 100%; padding: 12px; background: #2a5298; color: #fff; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; }
 
-        /* 支付弹窗 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; padding: 30px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%; }
         .modal-content h3 { color: #2a5298; margin-bottom: 15px; font-size: 1.5rem; }
         .modal-content img { width: 100%; max-width: 260px; border-radius: 8px; margin: 15px 0; border: 1px solid #eee; }
         .modal-btn { width: 100%; padding: 12px; background: #52c41a; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold;}
 
-        /* 客服组件 */
         .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
         .chat-btn { width: 60px; height: 60px; background: #2a5298; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 18px; font-weight: bold; }
         .chat-box { display: none; position: absolute; bottom: 80px; right: 0; width: 320px; height: 400px; background: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; border: 1px solid #eee; }
@@ -122,18 +123,26 @@
             
             <div class="steps">
                 <h3>报名及学习步骤</h3>
-                <ol>
+                <ol id="steps-list">
                     <li>填写下方订单信息并完成支付。</li>
                     <li>客服将在24小时内为您服务。</li>
                     <li>登录指定平台进行在线学习。</li>
                     <li>完成后通过邮箱通知，或者添加客服微信，微信回复您。</li>
+                    <!-- 专属的第5步将在JS中动态插入 -->
                 </ol>
             </div>
             
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <!-- 增加 id 以便 JS 动态修改提示语 -->
-                <p class="form-top-tip" id="form-tip">如果只能扫码进行登录，请联系客服微信。</p>
+                
+                <!-- 专属金额提示框（默认隐藏） -->
+                <div class="form-price-box" id="form-price-box">
+                    <span>需支付金额：</span>
+                    <span id="form-price">￥0.00</span>
+                </div>
+
+                <!-- 动态提示语 -->
+                <p class="form-top-tip" id="form-tip"></p>
 
                 <form id="orderForm">
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
@@ -216,6 +225,7 @@
 <script>
     // ==========================================
     // 🌟 项目数据配置区
+    // 新增了 customTip (专属提示), extraStep (专属步骤), showPriceInForm (表单显示金额)
     // ==========================================
     const projectData = [
         // --- 原有项目 ---
@@ -242,12 +252,56 @@
         { id: '91huayi', title: '91华医网', price: 10, coverImg: '4b800ff110d4a35fa9e13fbaac17915c.png', targetUrl: 'https://www.91huayi.com', desc: '91华医网在线学习平台。', detailImgs: ['4b800ff110d4a35fa9e13fbaac17915c.png'] },
         { id: 'pep', title: '特教教材国家级示范培训', price: 10, coverImg: '05db20f85aaf911ed11c347631928e19.jpg', targetUrl: 'https://wp.pep.com.cn/web/index.php?/login/index/0/1', desc: '特教教材国家级示范培训平台。', detailImgs: ['05db20f85aaf911ed11c347631928e19.jpg'] },
 
-        // --- 🌟 本次最新增加的 5 个项目 ---
-        { id: 'csust', title: '湖南省人力资源和社会保障厅-中南大学专技', price: 20, coverImg: '2f27972b2f9be96df1bd45a2d60c68e.jpg', targetUrl: 'https://zjpx.csu.edu.cn/', desc: '中南大学专业技术人员继续教育平台。', detailImgs: ['2f27972b2f9be96df1bd45a2d60c68e.jpg'] },
-        { id: 'gxpf', title: '广西普法网', price: 5, coverImg: '820f71f8c490c3ee7a8ffd4faa7bed.jpg', targetUrl: 'https://gxpf.sft.gxzf.gov.cn/portal/exam/home', desc: '广西普法网在线考试及学习平台。', detailImgs: ['820f71f8c490c3ee7a8ffd4faa7bed.jpg'] },
-        { id: 'csust2', title: '湖南人社-长沙理工大学', price: 20, coverImg: '6b3cc625d8bb36b46fa5e360d34d2b3.png', targetUrl: 'https://zyjx.csust.edu.cn/', desc: '长沙理工大学专业技术人员继续教育平台。', detailImgs: ['6b3cc625d8bb36b46fa5e360d34d2b3.png'] },
-        { id: 'hnsydwpx', title: '湖南省人力资源和社会保障厅-湖南开放大学', price: 20, coverImg: '5514eb82ff0fe2db0e76e8dc8d48066.jpg', targetUrl: 'https://www.hnsydwpx.cn/', desc: '湖南开放大学专业技术人员继续教育平台。', detailImgs: ['5514eb82ff0fe2db0e76e8dc8d48066.jpg'] },
-        { id: 'hnedu123', title: '湖南省人力资源和社会保障厅-湖南云畔', price: 20, coverImg: '21beaf25ab19865f33e50cc3cecbb60.jpg', targetUrl: 'https://www.hnedu123.com.cn/', desc: '湖南云畔在线学习平台。', detailImgs: ['21beaf25ab19865f33e50cc3cecbb60.jpg'] }
+        // --- 新增的 5 个项目 ---
+        { 
+            id: 'csu', 
+            title: '湖南省人力资源和社会保障厅-中南大学专技', 
+            price: 20, 
+            coverImg: '2f27972b2f9be96df1bd45a2d60c68e.jpg', 
+            targetUrl: 'https://zjpx.csu.edu.cn/', 
+            desc: '中南大学专业技术人员继续教育培训平台。', 
+            detailImgs: ['2f27972b2f9be96df1bd45a2d60c68e.jpg'] 
+        },
+        { 
+            id: 'gxpufa', 
+            title: '广西普法网', 
+            price: 5, 
+            coverImg: 'f820f71f8c490c3ee7a8ffd4faa7bed.jpg', // 已修复文件名，加了 f
+            targetUrl: 'https://gxpf.sft.gxzf.gov.cn/portal/exam/home', 
+            desc: '广西普法网在线考试及学习平台。', 
+            detailImgs: ['f820f71f8c490c3ee7a8ffd4faa7bed.jpg'],
+            // --- 广西普法网专属配置 ---
+            customTip: '请添加客服，需要接收验证码登录。',
+            extraStep: '每一题答题秒数可以控制，答题总时间分数可控制，默认秒答100分，定制请联系客服。',
+            showPriceInForm: true 
+        },
+        { 
+            id: 'csust', 
+            title: '湖南人社-长沙理工大学', 
+            price: 20, 
+            coverImg: '6b3cc625d8bb36b46fa5e360d34d2b3.png', 
+            targetUrl: 'https://zyjx.csust.edu.cn/', 
+            desc: '长沙理工大学专业技术人员继续教育平台。', 
+            detailImgs: ['6b3cc625d8bb36b46fa5e360d34d2b3.png'] 
+        },
+        { 
+            id: 'hnou', 
+            title: '湖南省人力资源和社会保障厅-湖南开放大学', 
+            price: 20, 
+            coverImg: '5514eb82ff0fe2db0e76e8dc8d48066.jpg', 
+            targetUrl: 'https://www.hnsydwpx.cn/', 
+            desc: '湖南开放大学专业技术人员继续教育平台。', 
+            detailImgs: ['5514eb82ff0fe2db0e76e8dc8d48066.jpg'] 
+        },
+        { 
+            id: 'hnyunpan', 
+            title: '湖南省人力资源和社会保障厅-湖南云畔', 
+            price: 20, 
+            coverImg: '21beaf25ab19865f33e50cc3cecbb60.jpg', 
+            targetUrl: 'https://www.hnedu123.com.cn/', 
+            desc: '湖南云畔专业技术人员继续教育平台。', 
+            detailImgs: ['21beaf25ab19865f33e50cc3cecbb60.jpg'] 
+        }
     ];
 
     let currentPrice = 0;
@@ -273,7 +327,6 @@
             <div class="card" onclick="openProjectDetail('${proj.id}')">
                 <img src="${proj.coverImg}" alt="${proj.title}">
                 <div class="card-content">
-                    <!-- 统一改为 -学习助手 -->
                     <h3>${proj.title}-学习助手</h3>
                     <p>${proj.desc}</p>
                 </div>
@@ -308,7 +361,6 @@
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
         
-        // 统一改为 -学习助手
         document.getElementById('detail-title').innerText = proj.title + '-学习助手';
         
         const contentHtml = `
@@ -319,16 +371,37 @@
         `;
         document.getElementById('detail-content').innerHTML = contentHtml;
         
-        // 统一改为 -学习助手
         document.getElementById('order-project-name').value = proj.title + '-学习助手';
         currentPrice = proj.price;
 
-        // 【核心修改】动态判断表单顶部的提示语
+        // --- 处理表单专属提示语 ---
         const formTip = document.getElementById('form-tip');
-        if (projectId === 'gxpf') {
-            formTip.innerText = '只能扫码登录，添加客服，需要接收验证码登录。';
+        if (proj.customTip) {
+            formTip.innerText = proj.customTip;
         } else {
-            formTip.innerText = '如果只能扫码进行登录，请联系客服微信。';
+            formTip.innerText = '如果只能扫码进行登录，请联系客服微信。'; // 默认提示语
+        }
+
+        // --- 处理专属第5步 ---
+        const stepsList = document.getElementById('steps-list');
+        // 先清理掉可能存在的旧的第5步
+        const existingExtraStep = document.getElementById('extra-step-li');
+        if (existingExtraStep) existingExtraStep.remove();
+        
+        if (proj.extraStep) {
+            const li = document.createElement('li');
+            li.id = 'extra-step-li';
+            li.innerText = proj.extraStep;
+            stepsList.appendChild(li);
+        }
+
+        // --- 处理表单专属金额显示 ---
+        const priceBox = document.getElementById('form-price-box');
+        if (proj.showPriceInForm) {
+            document.getElementById('form-price').innerText = `￥${proj.price}.00`;
+            priceBox.style.display = 'block';
+        } else {
+            priceBox.style.display = 'none';
         }
 
         history.pushState({ page: 'detail' }, '', '#detail');
