@@ -99,7 +99,6 @@
 
     <div class="container">
         <div id="home-page">
-            <!-- 【已修改】横幅增加了一句话，并调整了字号和行高适配手机 -->
             <div style="text-align: center; margin-bottom: 20px;">
                 <span style="display: inline-block; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); color: #fff; padding: 12px 25px; border-radius: 30px; font-size: 1.05rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255,75,43,0.3); letter-spacing: 1px; line-height: 1.5;">
                     成团有优惠，详情请联系客服！<br>没有的学习课程，可以联系客服微信进行开发。
@@ -133,8 +132,8 @@
             
             <div class="order-form">
                 <h3>填写订单信息</h3>
-                <!-- 【已新增】表单顶部的提示语 -->
-                <p class="form-top-tip">如果只能扫码进行登录，请联系客服微信。</p>
+                <!-- 增加 id 以便 JS 动态修改提示语 -->
+                <p class="form-top-tip" id="form-tip">如果只能扫码进行登录，请联系客服微信。</p>
 
                 <form id="orderForm">
                     <input type="hidden" name="报名项目" id="order-project-name" value="">
@@ -225,8 +224,6 @@
         { id: 'gxganbu', title: '广西干部网络学院', price: 10, coverImg: '微信图片_20261107101539.png', targetUrl: 'https://www.gxela.gov.cn', desc: '广西干部网络学院在线学习平台。', detailImgs: ['微信图片_20261107101539.png'] },
         { id: 'shenzhen', title: '深圳市教师教育网', price: 10, coverImg: '微信图片_20261107101849.png', targetUrl: 'https://www.0755tt.com/home?redirect=%2Fportal', desc: '深圳市教师继续教育专属培训平台。', detailImgs: ['微信图片_20261107101849.png'] },
         { id: 'guangzhou', title: '广州市中小学教师继续教育网', price: 10, coverImg: '微信图片_20261107101857.png', targetUrl: 'https://www.gzteacher.com/', desc: '广州市中小学教师继续教育平台。', detailImgs: ['微信图片_20261107101857.png'] },
-
-        // --- 新增项目 ---
         { id: 'hnu', title: '湖南大学国家级专业技术人员继续教育基地', price: 10, coverImg: '0e08a8e97abcc3009927b7e03d2997a5.png', targetUrl: 'https://jxjyjd.hnu.edu.cn/', desc: '湖南大学国家级专业技术人员继续教育基地培训平台。', detailImgs: ['0e08a8e97abcc3009927b7e03d2997a5.png'] },
         { id: 'hunnu', title: '湖南师范大学国家级专业技术人员教育基地', price: 10, coverImg: 'f5e0c82a9dd1ee4b0a7168d23a63b2b5.png', targetUrl: 'https://zjjxjy.hunnu.edu.cn/', desc: '湖南师范大学国家级专业技术人员教育基地培训平台。', detailImgs: ['f5e0c82a9dd1ee4b0a7168d23a63b2b5.png'] },
         { id: 'cqooc', title: '重庆智慧教育平台(高校在线)', price: 10, coverImg: 'd620608e8f48a242408b0038960c6af0.jpg', targetUrl: 'http://www.cqooc.com/', desc: '重庆智慧教育平台(高校在线)学习入口。', detailImgs: ['d620608e8f48a242408b0038960c6af0.jpg'] },
@@ -243,7 +240,14 @@
         { id: 'gzsrs', title: '贵州公需课|贵州省专业技术人员继续教育平台', price: 10, coverImg: '0840597ef5de797579c40eb2e059490d.jpg', targetUrl: 'https://gzjxjy.gzsrs.cn/thr102-profession-tp/template/pc/#/index', desc: '贵州省专业技术人员继续教育平台。', detailImgs: ['0840597ef5de797579c40eb2e059490d.jpg'] },
         { id: 'henanyixue', title: '河南省继续医学教育学习平台', price: 10, coverImg: '4d63ec3842672a511bf39eaa897b26f0.jpg', targetUrl: 'https://yuancheng.henanyixue.com', desc: '河南省继续医学教育学习平台。', detailImgs: ['4d63ec3842672a511bf39eaa897b26f0.jpg'] },
         { id: '91huayi', title: '91华医网', price: 10, coverImg: '4b800ff110d4a35fa9e13fbaac17915c.png', targetUrl: 'https://www.91huayi.com', desc: '91华医网在线学习平台。', detailImgs: ['4b800ff110d4a35fa9e13fbaac17915c.png'] },
-        { id: 'pep', title: '特教教材国家级示范培训', price: 10, coverImg: '05db20f85aaf911ed11c347631928e19.jpg', targetUrl: 'https://wp.pep.com.cn/web/index.php?/login/index/0/1', desc: '特教教材国家级示范培训平台。', detailImgs: ['05db20f85aaf911ed11c347631928e19.jpg'] }
+        { id: 'pep', title: '特教教材国家级示范培训', price: 10, coverImg: '05db20f85aaf911ed11c347631928e19.jpg', targetUrl: 'https://wp.pep.com.cn/web/index.php?/login/index/0/1', desc: '特教教材国家级示范培训平台。', detailImgs: ['05db20f85aaf911ed11c347631928e19.jpg'] },
+
+        // --- 🌟 本次最新增加的 5 个项目 ---
+        { id: 'csust', title: '湖南省人力资源和社会保障厅-中南大学专技', price: 20, coverImg: '2f27972b2f9be96df1bd45a2d60c68e.jpg', targetUrl: 'https://zjpx.csu.edu.cn/', desc: '中南大学专业技术人员继续教育平台。', detailImgs: ['2f27972b2f9be96df1bd45a2d60c68e.jpg'] },
+        { id: 'gxpf', title: '广西普法网', price: 5, coverImg: '820f71f8c490c3ee7a8ffd4faa7bed.jpg', targetUrl: 'https://gxpf.sft.gxzf.gov.cn/portal/exam/home', desc: '广西普法网在线考试及学习平台。', detailImgs: ['820f71f8c490c3ee7a8ffd4faa7bed.jpg'] },
+        { id: 'csust2', title: '湖南人社-长沙理工大学', price: 20, coverImg: '6b3cc625d8bb36b46fa5e360d34d2b3.png', targetUrl: 'https://zyjx.csust.edu.cn/', desc: '长沙理工大学专业技术人员继续教育平台。', detailImgs: ['6b3cc625d8bb36b46fa5e360d34d2b3.png'] },
+        { id: 'hnsydwpx', title: '湖南省人力资源和社会保障厅-湖南开放大学', price: 20, coverImg: '5514eb82ff0fe2db0e76e8dc8d48066.jpg', targetUrl: 'https://www.hnsydwpx.cn/', desc: '湖南开放大学专业技术人员继续教育平台。', detailImgs: ['5514eb82ff0fe2db0e76e8dc8d48066.jpg'] },
+        { id: 'hnedu123', title: '湖南省人力资源和社会保障厅-湖南云畔', price: 20, coverImg: '21beaf25ab19865f33e50cc3cecbb60.jpg', targetUrl: 'https://www.hnedu123.com.cn/', desc: '湖南云畔在线学习平台。', detailImgs: ['21beaf25ab19865f33e50cc3cecbb60.jpg'] }
     ];
 
     let currentPrice = 0;
@@ -269,7 +273,8 @@
             <div class="card" onclick="openProjectDetail('${proj.id}')">
                 <img src="${proj.coverImg}" alt="${proj.title}">
                 <div class="card-content">
-                    <h3>${proj.title}-课程助手</h3>
+                    <!-- 统一改为 -学习助手 -->
+                    <h3>${proj.title}-学习助手</h3>
                     <p>${proj.desc}</p>
                 </div>
             </div>
@@ -303,7 +308,8 @@
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('detail-page').style.display = 'block';
         
-        document.getElementById('detail-title').innerText = proj.title + '-课程助手';
+        // 统一改为 -学习助手
+        document.getElementById('detail-title').innerText = proj.title + '-学习助手';
         
         const contentHtml = `
             <a href="${proj.targetUrl}" target="_blank" class="detail-link-btn">点击查看网址</a>
@@ -313,8 +319,17 @@
         `;
         document.getElementById('detail-content').innerHTML = contentHtml;
         
-        document.getElementById('order-project-name').value = proj.title + '-课程助手';
+        // 统一改为 -学习助手
+        document.getElementById('order-project-name').value = proj.title + '-学习助手';
         currentPrice = proj.price;
+
+        // 【核心修改】动态判断表单顶部的提示语
+        const formTip = document.getElementById('form-tip');
+        if (projectId === 'gxpf') {
+            formTip.innerText = '只能扫码登录，添加客服，需要接收验证码登录。';
+        } else {
+            formTip.innerText = '如果只能扫码进行登录，请联系客服微信。';
+        }
 
         history.pushState({ page: 'detail' }, '', '#detail');
         window.scrollTo({ top: 0, behavior: 'smooth' });
